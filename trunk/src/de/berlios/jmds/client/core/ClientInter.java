@@ -27,10 +27,10 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements ClientRequ
 	 */
 	public void send_request (ClientRequestInfo ri) throws ForwardRequest
 	{
-		ServiceContext sc = new ServiceContext ();
-		byte[] scData = "toto".getBytes();
-		sc.context_data = scData;
-		ri.add_request_service_context (sc, true);
+//		ServiceContext sc = new ServiceContext ();
+//		byte[] scData = "toto".getBytes();
+//		sc.context_data = scData;
+//		ri.add_request_service_context (null, true);
 		System.out.println ("ClientInter.send request: " + ri.operation ());
 	}
 
@@ -47,10 +47,9 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements ClientRequ
 	 */
 	public void receive_reply (ClientRequestInfo ri)
 	{
-		ServiceContext sc = ri.get_reply_service_context(0);
-		String sData = new String(sc.context_data);
-		System.out.println ("ClientInter.receive reply: " + sData);
-		
+		System.out.println ("ClientInter.receive reply: " + ri.operation ());
+//		ServiceContext sc = ri.get_reply_service_context(0);
+//		String sData = new String(sc.context_data);		
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements ClientRequ
 	 */
 	public void receive_exception (ClientRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ClientInter.receive exception: " + ri.operation ());
+		System.out.println ("ClientInter.receive exception: " );
 	}
 
 	/**

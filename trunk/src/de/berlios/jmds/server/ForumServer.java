@@ -35,10 +35,16 @@ public class ForumServer
 	public static void main (String [] args) throws InvalidName, ServantAlreadyActive, ObjectNotActive, WrongPolicy, IOException, AdapterInactive
 	{
 		/* Initialisation de l'ORB */
-		Properties prop = new Properties ();
+/*		Properties prop = new Properties ();
 		prop.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.server.core.ServerORBInitializer" , "");
 		ORB orb = ORB.init (args , prop);
-
+*/
+		/*Initilisation de JAC ORB*/
+		java.util.Properties props = new java.util.Properties();
+		props.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.server.core.ServerORBInitializer" , "");
+		props.put("jacorb.implname","StandardNS");
+		ORB orb = org.omg.CORBA.ORB.init(args, props);
+		
 		/* Récupération de référence de l'adaptateur d'objet racine */
 		POA rootPOA = POAHelper.narrow (orb.resolve_initial_references ("RootPOA"));
 

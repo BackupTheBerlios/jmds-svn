@@ -29,9 +29,16 @@ public class ForumClient
 	{
 
 		/* initialisation de l'ORB */
-		Properties prop = new Properties ();
+/*		Properties prop = new Properties ();
 		prop.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.client.core.ClientORBInitializer" , "");
 		ORB orb = ORB.init (args , prop);
+*/
+		/*Initilisation de JAC ORB*/
+		java.util.Properties props = new java.util.Properties();
+		props.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.client.core.ClientORBInitializer" , "");
+		props.put("jacorb.implname","StandardNS");
+		ORB orb = org.omg.CORBA.ORB.init(args, props);
+		
 		/* Récupération de l'id de l'objet servant */
 		BufferedReader buffer = new BufferedReader (new FileReader ("ObjectRef"));
 		String ior = buffer.readLine ();

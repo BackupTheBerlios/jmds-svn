@@ -27,12 +27,21 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
-		ServiceContext sc = ri.get_request_service_context (0);
-		String sData = new String (sc.context_data);
-		System.out.println ("ServerInter.receive request_SC: " + sData);
-		sc.context_data = "titi".getBytes ();
-		ri.add_reply_service_context (sc , true);
-
+		String sData;
+		System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
+		System.out.println ("RI : " + ri);
+//		if(ri.contexts() != null) {
+//			
+//			ServiceContext  sc = ri.get_request_service_context (0);			
+//			if(sc.context_data != null || sc.context_data.length == 0) { 
+//				sData = new String (sc.context_data);
+//			}
+//			else {
+//				System.out.println ("ServerInter.receive request_SC: send Exception");
+//				//send_exception(ri);
+//			}
+//		}
+		
 	}
 
 	/**
@@ -41,6 +50,16 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	public void receive_request (ServerRequestInfo ri) throws ForwardRequest
 	{
 		System.out.println ("ServerInter.receive request: " + ri.operation ());
+		/*System.out.println ("RI : " + ri);
+		String sData;
+		ServiceContext  sc = ri.get_request_service_context (0);			
+		if(sc.context_data != null || sc.context_data.length == 0) { 
+			sData = new String (sc.context_data);
+		}
+		else {
+			System.out.println ("ServerInter.receive request_SC: send Exception");
+			send_exception(ri);
+		}*/
 	}
 
 	/**
@@ -48,9 +67,9 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_reply (ServerRequestInfo ri)
 	{
-		ServiceContext sc = ri.get_request_service_context (0);
+		/*ServiceContext sc = ri.get_request_service_context (0);
 		sc.context_data = "titi".getBytes ();
-		ri.add_reply_service_context (sc , true);
+		ri.add_reply_service_context (sc , true);*/
 		System.out.println ("ServerInter.send_reply: " + ri.operation ());
 
 	}
