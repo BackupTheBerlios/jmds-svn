@@ -20,7 +20,14 @@ import org.omg.PortableServer.POAPackage.*;
 public class ForumServer {
 
 	public static void main(String[] args) throws InvalidName, ServantAlreadyActive, ObjectNotActive, WrongPolicy, IOException, AdapterInactive, NotFound, AlreadyBound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
-		ORB orb = ORB.init(args, null);
+        
+        java.util.Properties props = System.getProperties();
+//        props.put( "org.omg.CORBA.ORBClass", "org.openorb.CORBA.ORB" );
+//        props.put( "org.omg.CORBA.ORBSingletonClass", "org.openorb.CORBA.ORBSingleton" );
+//        props.put( "verbose", "5" );
+        props.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.server.ServerORBInitializer" , "");
+
+		ORB orb = ORB.init(args, props);
 		POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 		
 		ForumImpl forum = new ForumImpl("Forum de Test", "GG");
@@ -32,33 +39,14 @@ public class ForumServer {
         Object ns = orb.resolve_initial_references("NameService");
         NamingContextExt nc = NamingContextExtHelper.narrow(ns) ;
         
-        NameComponent[] name=null;
-        NamingContext ctxNC = null;
+        NameComponent[] name = nc.to_name("jmdsForum");
         
-        try
-        {
-             ctxNC = nc.bind_new_context(nc.to_name("CTX"));
-        }
-        catch (AlreadyBound e) {
-            Object objTemp = nc.resolve(nc.to_name("CTX"));
-            if (objTemp instanceof NamingContext) {
-                nc.rebind(nc.to_name("CTX"), objTemp);
-            }
-            else throw e;
-        }
-        name = nc.to_name("CTX/forumGG");
-        
-        try {
-            nc.bind(name,obj);
-        } 
-        catch (AlreadyBound e) {
-            e.printStackTrace();
-            nc.rebind(name,obj);
-        }
+        nc.rebind(name,obj);
         
 		rootPOA.the_POAManager().activate();
-		orb.run();
         
         System.out.println("Server ready");
+        
+		orb.run();
 	}
 }

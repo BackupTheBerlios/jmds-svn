@@ -5,6 +5,7 @@
  */
 package de.berlios.jmds.client;
 
+import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.*;
 
 /**
@@ -20,7 +21,7 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
     /**
      * Comment for <code>serialVersionUID</code>
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3618417146430765111L;
 
     /**
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_request(org.omg.PortableInterceptor.ClientRequestInfo)
@@ -29,8 +30,9 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
         // ServiceContext sc = new ServiceContext ();
         // byte[] scData = "toto".getBytes();
         // sc.context_data = scData;
-        // ri.add_request_service_context (null, true);
-        System.out.println("ClientInter.send request: " + ri.operation());
+        // ri.add_request_service_context (sc, true);
+        System.out.println("ClientInter.send request: " + ri.operation()
+                + " number: " + ri.request_id());
     }
 
     /**
@@ -44,7 +46,8 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#receive_reply(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void receive_reply(ClientRequestInfo ri) {
-        System.out.println("ClientInter.receive reply: " + ri.operation());
+        System.out.println("ClientInter.receive reply: " + ri.operation()
+                + " number: " + ri.request_id());
         // ServiceContext sc = ri.get_reply_service_context(0);
         // String sData = new String(sc.context_data);
     }

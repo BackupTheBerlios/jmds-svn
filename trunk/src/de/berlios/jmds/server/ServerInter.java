@@ -5,8 +5,8 @@
  */
 package de.berlios.jmds.server;
 
+import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.*;
-
 
 /**
  * DOCME
@@ -18,31 +18,27 @@ import org.omg.PortableInterceptor.*;
 public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor
 {
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID	= 1L;
+    /**
+     * Comment for <code>serialVersionUID</code>
+     */
+    private static final long serialVersionUID = 3689630311277277232L;
 
-	/**
+    /**
 	 * @see org.omg.PortableInterceptor.ServerRequestInterceptorOperations#receive_request_service_contexts(org.omg.PortableInterceptor.ServerRequestInfo)
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
 		String sData;
-		System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
-		System.out.println ("RI : " + ri);
-//		if(ri.contexts() != null) {
-//			
-//			ServiceContext  sc = ri.get_request_service_context (0);			
-//			if(sc.context_data != null || sc.context_data.length == 0) { 
-//				sData = new String (sc.context_data);
-//			}
-//			else {
-//				System.out.println ("ServerInter.receive request_SC: send Exception");
-//				//send_exception(ri);
-//			}
-//		}
-		
+        System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
+        try
+        {
+            ServiceContext sc = ri.get_request_service_context (0);
+            sData = new String (sc.context_data);
+            System.out.println(sData);
+        }catch (org.omg.CORBA.BAD_PARAM bad_param)
+        {
+            System.err.println("Pas de service contexte");
+        }
 	}
 
 	/**
@@ -51,16 +47,6 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	public void receive_request (ServerRequestInfo ri) throws ForwardRequest
 	{
 		System.out.println ("ServerInter.receive request: " + ri.operation ());
-		/*System.out.println ("RI : " + ri);
-		String sData;
-		ServiceContext  sc = ri.get_request_service_context (0);			
-		if(sc.context_data != null || sc.context_data.length == 0) { 
-			sData = new String (sc.context_data);
-		}
-		else {
-			System.out.println ("ServerInter.receive request_SC: send Exception");
-			send_exception(ri);
-		}*/
 	}
 
 	/**
@@ -106,5 +92,4 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	public void destroy ()
 	{
 	}
-
 }
