@@ -10,6 +10,10 @@ import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAPackage.AdapterNonExistent;
+import org.omg.PortableServer.POAPackage.ObjectNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 /**
  * @author Sébastien GUINCHARD
@@ -23,26 +27,33 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	private static final long	serialVersionUID	= 3689630311277277232L;
 
+	POA rootPOA;
+	
 	// ----------------------------------------------------------//
 	// ------------------- PUBLIC METHODS -----------------------//
 	// ----------------------------------------------------------//
 
+	public ServerInter(POA rootPOA) {
+		this.rootPOA = rootPOA;
+	}
+	
 	/**
 	 * @see org.omg.PortableInterceptor.ServerRequestInterceptorOperations#receive_request_service_contexts(org.omg.PortableInterceptor.ServerRequestInfo)
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
 		System.out.println ("ServerInter.receive_request_SC request: " + ri.request_id());
+		
 		ServiceContext sc = ri.get_request_service_context(0);
 		byte[] scDecode = SCManager.getInstance().decode (sc.context_data);
         
-        System.out.println("Target= "+ ri.orb_id());
+        //System.out.println("Target= "+ ri.orb_id());
 		System.out.println (scDecode);
         
-        if (!RightsManager.getInstance ().canUse (userID + "" , ri.orb_id() , ri.operation ()))
+        /*if (!RightsManager.getInstance ().canUse (userID + "" , ri.orb_id() , ri.operation ()))
         {
             throw new SecurityException("User can not access to this object"); 
-        }
+        }*/
 	}
 
 	/**
@@ -50,7 +61,26 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive request: " + ri.request_id());
+		System.out.println ("ServerInter.receive request: " + ri.request_id());		
+		org.omg.CORBA.Object ior = null;
+		try {
+			String[] szAdapters = ri.adapter_name();
+			String szAdapterName = szAdapters[szAdapters.length - 1];
+			POA poa =  rootPOA.find_POA(szAdapterName, false);
+			ior = poa.id_to_reference(ri.object_id());
+			System.out.println("IOR??? : " + ior);
+			System.out.println("Methode??? : " + ri.operation());
+		} catch (AdapterNonExistent e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ObjectNotActive e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WrongPolicy e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

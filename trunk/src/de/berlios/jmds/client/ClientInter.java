@@ -39,6 +39,8 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      */
     public void send_request(ClientRequestInfo ri) throws ForwardRequest, SecurityException{
         System.out.println("ClientInter.send_request request: " + ri.request_id());
+        System.out.println("target : " + ri.target());
+        System.out.println("target : " + ri.operation());
         int id = ri.request_id();
         byte[] tabId = Integer.toString(id).getBytes();
         
@@ -66,16 +68,15 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      */
     public void receive_reply(ClientRequestInfo ri) {
         System.out.println("ClientInter.receive_reply request: " + ri.request_id());
-        ServiceContext sc = ri.get_reply_service_context(0);
         
+        //ServiceContext sc = ri.get_reply_service_context(0);
+        //ServiceContext sc = null;
         try {
-            short[] scDecode = SCAppletClient.decode (sc.context_data);
-            System.out.println (scDecode);
+        	
+            //short[] scDecode = SCAppletClient.decode (sc.context_data);
+            //System.out.println (scDecode);
         } catch (SecurityException e) {
             e.printStackTrace();
-        } catch (slbException e) {
-            e.printStackTrace();
-            throw new SecurityException("Impossible de décoder le message: erreur de communication avec la carte", e);
         }
     }
 

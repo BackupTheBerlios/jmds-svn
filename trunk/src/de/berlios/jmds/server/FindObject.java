@@ -16,6 +16,8 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
+import de.berlios.jmds.tools.RightsConfiguration;
+
 
 /**
  * @author jguers
@@ -57,27 +59,7 @@ public class FindObject {
      */
     private static void createConfig (ORB orb, NamingContext context) throws NotFound, CannotProceed, InvalidName
     {
-//    	Binding[] bl = null;
-//    	BindingListHolder blh = new BindingListHolder();
-//    	BindingIteratorHolder bih = new BindingIteratorHolder();
-//    	context.list (10, blh, bih);
-//    	bl = blh.value;
-//    	for (int i=0; i < bl.length; i++) {
-//    		for (int j=0; j<bl[i].binding_name.length; j++)
-//    			System.out.println ("boucle1 : " + bl[i].binding_name[j].id);
-//    	}
-//    	BindingIterator bi = bih.value;
-//    	if (bi != null) {
-//    		boolean continuer = true;
-//    		while (continuer) {
-//    			continuer = bi.next_n(10,blh);
-//    			bl = blh.value;
-//    			for (int i=0; i < bl.length; i++) {
-//    				System.out.println ("boucle2 : " + bl[i].binding_name);
-//    			}
-//    		}
-//    		bi.destroy();
-//    	}
+    	RightsConfiguration rightsConfig = RightsConfiguration.getInstance();
     	Binding[] binding = null;
     	BindingListHolder listHolder = new BindingListHolder ();
     	BindingIteratorHolder iteratorHolder = new BindingIteratorHolder ();
@@ -89,7 +71,8 @@ public class FindObject {
     			{
     				System.out.println(binding[i].binding_name[j].id + " : "+ binding[i].binding_name[j].kind +  " : " + binding[i].binding_name[j]);
     				Object objProxy = context.resolve(binding[i].binding_name);
-    				System.out.println(objProxy.toString());
+    				
+    				rightsConfig.addIOR(objProxy.toString());
     			}  
     			if ( binding[i].binding_type.equals (BindingType.ncontext))
     			{
@@ -98,5 +81,6 @@ public class FindObject {
     			}
     		}
     	} while( iteratorHolder.value != null && iteratorHolder.value.next_n (10, listHolder));
+    	rightsConfig.save();
     }
 }

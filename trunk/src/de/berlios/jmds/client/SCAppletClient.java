@@ -36,9 +36,10 @@ public class SCAppletClient {
      */
     public final static byte[] code(byte[] requestId) throws SecurityException, slbException {
         int[] intRequestId = Convertor.ByteArrayToIntArray(requestId);
-        short[] tmpCode = AppletManager.sendCardAPDU(CLA_SECURITY, INS_CODE, 0, 0, intRequestId, 0x40);
-        byte[] code = Convertor.ShortArrayToByteArray(tmpCode);
-        return code;
+       // short[] tmpCode = AppletManager.sendCardAPDU(CLA_SECURITY, INS_CODE, 0, 0, intRequestId, 0x40);
+        //byte[] code = Convertor.ShortArrayToByteArray(tmpCode);
+        //return code;
+        return requestId;
     }
 
     /**
