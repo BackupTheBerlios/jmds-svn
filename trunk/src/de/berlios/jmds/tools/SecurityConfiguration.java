@@ -9,6 +9,8 @@
  */
 package de.berlios.jmds.tools;
 
+import java.util.Iterator;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
@@ -38,8 +40,9 @@ public class SecurityConfiguration {
 	{
 		try
 		{
-			XMLConfiguration.setDelimiter('\n');
-			this.securityConfig = new XMLConfiguration (SECURITY_FILE);
+			securityConfig = new XMLConfiguration ();
+			securityConfig.setFileName(SECURITY_FILE);
+			securityConfig.load();
 		}
 		catch (ConfigurationException e)
 		{
@@ -68,29 +71,44 @@ public class SecurityConfiguration {
 	/**
 	 * @return the server key
 	 */
-	public byte[] getServerKey()
+	public String getServerKey()
 	{
-		// TODO
-		return null;	
+		return securityConfig.getString("server[@key]");	
 	}
 	
 	/**
-	 * @param iClientId the client identifiant
+	 * @param szClientId the client identifiant
 	 * @return			the client key
 	 */
-	public byte[] getClientKey (int iClientId)
+	public String getClientKey (String szClientId)
 	{
-		//TODO
-		return null;		
+		return getAttributByClientId (szClientId, "key");		
 	}
 	
 	/**
-	 * @param iClientId the client identifiant
-	 * @return			the group client
+	 * @param szClientId 	the client identifiant
+	 * @return				the group client
 	 */
-	public byte[] getclientGroup (int iClientId)
+	public String getclientGroup (String szClientId)
 	{
-		// TODO
-		return null;		
+		return getAttributByClientId (szClientId, "group");	
+	}
+	
+	/**
+	 * @param szClientId  	the client identifiant
+	 * @param szAttribute 	the attribute search
+	 * @return				the  search attribute value
+	 */
+	private String getAttributByClientId (String szClientId, String szAttribute){				
+		Iterator iter = securityConfig.getList("clients.client[@id]").iterator();
+		int i = 0;
+		while(iter.hasNext()){
+			String id = (String) iter.next();
+			if (id.compareTo(szClientId)==0)
+				return securityConfig.getString("clients.client("+i+")[@"+szAttribute+"]");;
+			i++;
+		}
+		System.out.println(szClientId);
+		return null;
 	}
 }
