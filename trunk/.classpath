@@ -5,6 +5,6 @@
 	<classpathentry kind="src" path="generated-src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/javacardframework.jar"/>
-	<classpathentry kind="lib" path="C:/Program Files/Schlumberger/Smart Cards and Terminals/Cyberflex Access Kits/v4/Middleware Interfaces/jiop/slbJIop.jar"/>
+	<classpathentry kind="lib" path="lib/slbJIop.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
