@@ -30,9 +30,16 @@ public class FindObject {
         for (int i = 0 ; i<objects.length; i++)
         	System.out.println(objects[i]);
         
-        POA object = (POA) orb.resolve_initial_references("RootPOA");
-        object.the_POAManager().activate();
-        System.out.println(object.get_servant_manager());
+        // Recuperation du root POA
+        POA rootPOA = (POA) orb.resolve_initial_references("RootPOA");
+        
+        // Recuperation des fils du root POA
+        POA[]  child= rootPOA.the_children();
+        for(int i = 0; i< child.length; i++)
+        {
+        	System.out.println(i +" : " + child[i].get_servant());
+        }
+         System.out.println("RootPOA :" + rootPOA.get_servant());
         //Object obj = object.id_to_reference(object.id());
 		//System.out.println(obj);
     }

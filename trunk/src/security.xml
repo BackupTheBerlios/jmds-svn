@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <jmds>
-	test
-   <server key="0123456789"/>
+	<server key="0123456789"/>
    <clients>
       <client id="1" key="1111111111" group="grp_1"/>
       <client id="2" key="2222222222" group="grp_2"/>
