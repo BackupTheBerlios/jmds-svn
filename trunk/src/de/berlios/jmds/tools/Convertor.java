@@ -1,20 +1,28 @@
-/*
- * Created on 9 févr. 2005
- * by Jérôme GUERS
- * Copyright: GPL - UMLV(FR) - 2004/2005
+/* 
+ * File    : SCManager.java
+ * Created : 9 févr. 2005
+ * 
+ * =======================================
+ * JMDS PROJECT ("http://jmds.berlios.de")
+ * =======================================
+ *
  */
+
 package de.berlios.jmds.tools;
 
 /**
  * Permet la conversion de String en short[] et inversement
  * 
- * @version 0.1
- * 
  * @author Jérôme GUERS
+ * 
  */
 public class Convertor {
     
-    /**
+	//----------------------------------------------------------//
+	//------------------- PUBLIC METHODS -----------------------//
+	//----------------------------------------------------------//    
+	
+	/**
      * DOCME
      * @param value 
      * @return a table of short

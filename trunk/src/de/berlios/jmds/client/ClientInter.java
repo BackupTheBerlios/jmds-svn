@@ -1,19 +1,21 @@
-/*
- * Created on 18 févr. 2005
- * by Sébastien GUINCHARD
- * Copyright: GPL - UMLV(FR) - 2004/2005
+/* 
+ * File    : SCManager.java
+ * Created : 18 févr. 2005
+ * 
+ * =======================================
+ * JMDS PROJECT ("http://jmds.berlios.de")
+ * =======================================
+ *
  */
 package de.berlios.jmds.client;
 
-import org.omg.IOP.ServiceContext;
-import org.omg.PortableInterceptor.*;
+import org.omg.PortableInterceptor.ClientRequestInfo;
+import org.omg.PortableInterceptor.ClientRequestInterceptor;
+import org.omg.PortableInterceptor.ForwardRequest;
 
 /**
- * DOCME
- * 
- * @version 0.1
- * 
  * @author Sébastien GUINCHARD
+ * 
  */
 public class ClientInter extends org.omg.CORBA.LocalObject implements
         ClientRequestInterceptor {
@@ -23,6 +25,10 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      */
     private static final long serialVersionUID = 3618417146430765111L;
 
+    //----------------------------------------------------------//
+	//------------------- PUBLIC METHODS -----------------------//
+	//----------------------------------------------------------//
+    
     /**
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_request(org.omg.PortableInterceptor.ClientRequestInfo)
      */

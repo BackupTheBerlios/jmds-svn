@@ -10,12 +10,17 @@
 
 package de.berlios.jmds.server;
 
+import de.berlios.jmds.tools.SecurityConfiguration;
+
 
 /**
  * @author Denis
  *
  */
 public class SCManager {
+	/** The security configuration **/
+	private SecurityConfiguration securityConfig = SecurityConfiguration.getInstance();
+	
 	/** The singleton instance * */
 	private static SCManager INSTANCE = null;
 	
@@ -38,9 +43,9 @@ public class SCManager {
 
 	
 	/**
-	 * To get the singleton instance of LDAP
+	 * To get the singleton instance of SCManager
 	 * 
-	 * @return the singleton instance of LDAP
+	 * @return the singleton instance of SCManager
 	 */
 	public static SCManager getInstance ()
 	{
@@ -51,7 +56,7 @@ public class SCManager {
 	}
 	
 	/**
-	 * @param iRequest_ID as id of the request message
+	 * @param RequestId as id of the request message
 	 * @return The array byte which contains the encoding servec context
 	 */
 	public byte[] code (byte[] RequestId)

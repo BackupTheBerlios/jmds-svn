@@ -1,8 +1,13 @@
-/*
- * Created on 18 févr. 2005
- * by Sébastien GUINCHARD
- * Copyright: GPL - UMLV(FR) - 2004/2005
+/* 
+ * File    : SCManager.java
+ * Created : 18 févr. 2005
+ * 
+ * =======================================
+ * JMDS PROJECT ("http://jmds.berlios.de")
+ * =======================================
+ *
  */
+
 package de.berlios.jmds.server;
 
 import org.omg.CORBA.LocalObject;
@@ -10,11 +15,8 @@ import org.omg.PortableInterceptor.*;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
 /**
- * DOCME
- * 
- * @version 0.1
- * 
  * @author Sébastien GUINCHARD
+ * 
  */
 public class ServerORBInitializer extends LocalObject implements ORBInitializer {
 
@@ -23,6 +25,10 @@ public class ServerORBInitializer extends LocalObject implements ORBInitializer 
      */
     private static final long serialVersionUID = 1L;
 
+	//----------------------------------------------------------//
+	//------------------- PUBLIC METHODS -----------------------//
+	//----------------------------------------------------------//
+    
     /**
      * @see org.omg.PortableInterceptor.ORBInitializerOperations#pre_init(org.omg.PortableInterceptor.ORBInitInfo)
      */

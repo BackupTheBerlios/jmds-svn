@@ -16,6 +16,10 @@ import org.omg.CosNaming.*;
  */
 public class ForumClient {
 
+    /**
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         java.util.Properties props = System.getProperties();
         // props.put( "org.omg.CORBA.ORBClass", "org.openorb.CORBA.ORB" );

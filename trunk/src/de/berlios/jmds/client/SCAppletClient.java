@@ -51,7 +51,7 @@ public class SCAppletClient {
 	}
 	
 	/**
-	 * @param iRequest_ID as id of the request message
+	 * @param RequestId as id of the request message
 	 * @return The array byte which contains the encoding servec context
 	 */
 	public byte[] code (byte[] RequestId)

@@ -10,8 +10,8 @@
 
 package de.berlios.jmds.server;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.XMLConfiguration;
+import de.berlios.jmds.tools.RightsConfiguration;
+import de.berlios.jmds.tools.SecurityConfiguration;
 
 /**
  * @author Denis
@@ -20,16 +20,14 @@ import org.apache.commons.configuration.XMLConfiguration;
 public class RightsManager {
 	
 	/** The security configuration **/
-	private XMLConfiguration securityConfig;
+	private SecurityConfiguration securityConfig = SecurityConfiguration.getInstance();
 	
 	/** The rights configuration **/
-	private XMLConfiguration rightsConfig;
+	private RightsConfiguration rightsConfig=RightsConfiguration.getInstance();
 	
-	/** The security config file **/
-	private static final String SECURITY_FILE = "security.xml";
 	
-	/** The rigts config file **/
-	private static final String RIGHTS_FILE = "rights.xml";
+	
+	
 	
 	/** The singleton instance * */
 	private static RightsManager INSTANCE = null;
@@ -44,16 +42,7 @@ public class RightsManager {
 	 */
 	private RightsManager ()
 	{
-		try
-		{
-			XMLConfiguration.setDelimiter('\n');
-			this.securityConfig = new XMLConfiguration (SECURITY_FILE);
-			this.rightsConfig = new XMLConfiguration (RIGHTS_FILE);				
-		}
-		catch (ConfigurationException e)
-		{
-			throw new RuntimeException (e);
-		}			
+			
 	}
 	
 	//----------------------------------------------------------//
@@ -62,9 +51,9 @@ public class RightsManager {
 
 	
 	/**
-	 * To get the singleton instance of LDAP
+	 * To get the singleton instance of RightsManager
 	 * 
-	 * @return the singleton instance of LDAP
+	 * @return the singleton instance of RightsManager
 	 */
 	public static RightsManager getInstance ()
 	{

@@ -19,6 +19,20 @@ import org.omg.PortableServer.POAPackage.*;
  */
 public class ForumServer {
 
+	/**
+	 * @param args
+	 * @throws InvalidName
+	 * @throws ServantAlreadyActive
+	 * @throws ObjectNotActive
+	 * @throws WrongPolicy
+	 * @throws IOException
+	 * @throws AdapterInactive
+	 * @throws NotFound
+	 * @throws AlreadyBound
+	 * @throws CannotProceed
+	 * @throws InvalidName
+	 * @throws org.omg.CosNaming.NamingContextPackage.InvalidName 
+	 */
 	public static void main(String[] args) throws InvalidName, ServantAlreadyActive, ObjectNotActive, WrongPolicy, IOException, AdapterInactive, NotFound, AlreadyBound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
         
         java.util.Properties props = System.getProperties();
