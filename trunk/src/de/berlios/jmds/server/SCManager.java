@@ -54,7 +54,7 @@ public class SCManager {
 	 * @param iRequest_ID as id of the request message
 	 * @return The array byte which contains the encoding servec context
 	 */
-	public byte[] code (int iRequest_ID)
+	public byte[] code (byte[] RequestId)
 	{
 		// TODO
 		return null;
