@@ -7,5 +7,5 @@ Version=1.0
 ClassDir=d:\1G2K - SOPRA\IR3\Corba\jmds\SVN\trunk\classes
 [Applets]
 NumApplets=1
-Applet1=SCApplet.class
+Applet1=SCAppletWithKey.class
 Applet1AID=11223344556677

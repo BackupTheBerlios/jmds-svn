@@ -14,6 +14,8 @@ import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.ForwardRequest;
 
+import slb.iop.slbException;
+
 /**
  * @author Sébastien GUINCHARD
  * 
@@ -24,39 +26,31 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
     /**
      * Comment for <code>serialVersionUID</code>
      */
-    private static final long serialVersionUID = 3618417146430765111L;
+    private final static long serialVersionUID = 3618417146430765111L;
+    private final static SCAppletClient SC_APPLET = SCAppletClient.getInstance();
 
     //----------------------------------------------------------//
 	//------------------- PUBLIC METHODS -----------------------//
 	//----------------------------------------------------------//
     
     /**
+     * @throws slbException 
+     * @throws SecurityException 
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_request(org.omg.PortableInterceptor.ClientRequestInfo)
      */
-    public void send_request(ClientRequestInfo ri) throws ForwardRequest {
-        ServiceContext sc = new ServiceContext ();
-        
-        System.out.println("ClientInter.send request: " + ri.operation()
-                + " number: " + ri.request_id());
-        SCAppletClient scApplet = SCAppletClient.getInstance();
+    public void send_request(ClientRequestInfo ri) throws ForwardRequest, SecurityException{
         int id = ri.request_id();
-        byte[] tabId = new Integer(id).toString().getBytes();
-        System.out.println (tabId.length);
+        byte[] tabId = Integer.toString(id).getBytes();
 
-        byte[] tabByteSC = scApplet.code(tabId);
-        
-        //Test affichage
-        for(int i=0; i < tabByteSC.length; i++) {
-        	System.out.print(tabByteSC[i]);
+        try {
+            byte[] tabByteSC = SC_APPLET.code(tabId);
+            
+            ServiceContext sc = new ServiceContext ();
+            sc.context_data = tabByteSC;
+            ri.add_request_service_context(sc,true);
+        } catch (slbException e) {
+            throw new SecurityException("Impossible de coder le message: erreur de communication avec la carte", e);
         }
-   
-        
-        if(tabByteSC == null) {
-        	throw new SecurityException("Impossible de coder le message: Verifier la présence de la carte dans le lecteur");
-        }
-        sc.context_data = tabByteSC;
-        ri.add_request_service_context(sc,true);
-        
     }
 
     /**
@@ -102,5 +96,4 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      */
     public void destroy() {
     }
-
 }

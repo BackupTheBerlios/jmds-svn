@@ -52,7 +52,7 @@ public class SCApplet extends Applet {
      * @see javacard.framework.Applet#install(byte[], short, byte)
      */
     public static void install(byte[] bArray, short bOffset, byte bLength) {
-        new SCAppletWithKey();
+        new SCApplet();
     }
 
     /**
@@ -64,7 +64,7 @@ public class SCApplet extends Applet {
      * @see javacard.framework.Applet#process(javacard.framework.APDU)
      */
     public void process(APDU apdu) throws ISOException {
-        byte[] buffer = apdu.getBuffer();
+        buffer = apdu.getBuffer();
 
         if (buffer[ISO7816.OFFSET_CLA] == CLA_SECURITY) {
             switch (buffer[ISO7816.OFFSET_INS]) {
@@ -72,14 +72,7 @@ public class SCApplet extends Applet {
                     encode(apdu);
                     break;
                 
-                case INS_GET_CODE:
-                    getEncode(apdu);
-                    break;
-
                 case INS_DECODE:
-                    break;
-                    
-                case INS_GET_DECODE:
                     break;
                     
                 case INS_SET_USER_KEY:
@@ -100,10 +93,7 @@ public class SCApplet extends Applet {
         for (short i = 0; i < messLength; i++) {
             code[(short)(i + key)] = buffer[(short)(i + ISO7816.OFFSET_CDATA)];
         }
-    }
-    
-    private void getEncode(APDU apdu)
-    {
+        
         short Le = apdu.setOutgoing();
         // Verification que Le >= Lc (taille des données envoyées)
         if (Le < BUFFER_LENGTH)
