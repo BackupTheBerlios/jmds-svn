@@ -48,8 +48,7 @@ public class ForumServer {
 		
 		byte [] objectID = rootPOA.activate_object(forum);		
 		Object obj = rootPOA.id_to_reference(objectID);
-		System.out.println(objectID);
-		System.out.println(obj);
+
         //Création du service d'annuaire
         Object ns = orb.resolve_initial_references("NameService");
         NamingContextExt nc = NamingContextExtHelper.narrow(ns) ;
