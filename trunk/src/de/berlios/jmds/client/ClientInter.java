@@ -9,6 +9,7 @@
  */
 package de.berlios.jmds.client;
 
+import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.ForwardRequest;
@@ -33,12 +34,29 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_request(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void send_request(ClientRequestInfo ri) throws ForwardRequest {
-        // ServiceContext sc = new ServiceContext ();
-        // byte[] scData = "toto".getBytes();
-        // sc.context_data = scData;
-        // ri.add_request_service_context (sc, true);
+        ServiceContext sc = new ServiceContext ();
+        
         System.out.println("ClientInter.send request: " + ri.operation()
                 + " number: " + ri.request_id());
+        SCAppletClient scApplet = SCAppletClient.getInstance();
+        int id = ri.request_id();
+        byte[] tabId = new Integer(id).toString().getBytes();
+        System.out.println (tabId.length);
+
+        byte[] tabByteSC = scApplet.code(tabId);
+        
+        //Test affichage
+        for(int i=0; i < tabByteSC.length; i++) {
+        	System.out.print(tabByteSC[i]);
+        }
+   
+        
+        if(tabByteSC == null) {
+        	throw new SecurityException("Impossible de coder le message: Verifier la présence de la carte dans le lecteur");
+        }
+        sc.context_data = tabByteSC;
+        ri.add_request_service_context(sc,true);
+        
     }
 
     /**
@@ -62,7 +80,7 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#receive_exception(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void receive_exception(ClientRequestInfo ri) throws ForwardRequest {
-        System.out.println("ClientInter.receive exception: ");
+        System.out.println("ClientInter.receive exception: "+ ri.operation());
     }
 
     /**

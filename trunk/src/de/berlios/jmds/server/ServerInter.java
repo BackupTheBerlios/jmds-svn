@@ -1,50 +1,43 @@
-/* 
- * File    : SCManager.java
- * Created : 18 févr. 2005
- * 
- * =======================================
- * JMDS PROJECT ("http://jmds.berlios.de")
- * =======================================
- *
+/*
+ * File : SCManager.java Created : 18 févr. 2005
+ * ======================================= JMDS PROJECT
+ * ("http://jmds.berlios.de") =======================================
  */
 
 package de.berlios.jmds.server;
 
 import org.omg.IOP.ServiceContext;
-import org.omg.PortableInterceptor.*;
+import org.omg.PortableInterceptor.ForwardRequest;
+import org.omg.PortableInterceptor.ServerRequestInfo;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
-/** 
+
+/**
  * @author Sébastien GUINCHARD
- * 
  */
 public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor
 {
 
-    /**
-     * Comment for <code>serialVersionUID</code>
-     */
-    private static final long serialVersionUID = 3689630311277277232L;
+	private int					userID;
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3689630311277277232L;
 
-	//----------------------------------------------------------//
-	//------------------- PUBLIC METHODS -----------------------//
-	//----------------------------------------------------------//    
-    
-    /**
+	// ----------------------------------------------------------//
+	// ------------------- PUBLIC METHODS -----------------------//
+	// ----------------------------------------------------------//
+
+	/**
 	 * @see org.omg.PortableInterceptor.ServerRequestInterceptorOperations#receive_request_service_contexts(org.omg.PortableInterceptor.ServerRequestInfo)
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
-		String sData;
-        System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
-        try
-        {
-            ServiceContext sc = ri.get_request_service_context (0);
-            sData = new String (sc.context_data);
-            System.out.println(sData);
-        }catch (org.omg.CORBA.BAD_PARAM bad_param)
-        {
-            System.err.println("Pas de service contexte");
-        }
+		System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
+		ServiceContext sc = ri.get_request_service_context (0);
+		SCManager scManager = SCManager.getInstance ();
+		userID = scManager.decode (sc.context_data);
+		System.out.println (userID);
 	}
 
 	/**
@@ -53,6 +46,10 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	public void receive_request (ServerRequestInfo ri) throws ForwardRequest
 	{
 		System.out.println ("ServerInter.receive request: " + ri.operation ());
+		if (!RightsManager.getInstance ().canUse (userID + "" , new String (ri.object_id ()) , ri.operation ()))
+		{
+			//throw new SecurityException("User can not access to this object"); 
+		}
 	}
 
 	/**
@@ -60,11 +57,13 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_reply (ServerRequestInfo ri)
 	{
-		/*ServiceContext sc = ri.get_request_service_context (0);
-		sc.context_data = "titi".getBytes ();
-		ri.add_reply_service_context (sc , true);*/
-		System.out.println ("ServerInter.send_reply: " + ri.operation ());
+		ServiceContext sc = ri.get_request_service_context (0);
+		SCManager scManager = SCManager.getInstance ();
 
+		byte [] tabByteSC = new Integer (ri.request_id ()).toString ().getBytes ();
+		//byte [] tabByteSC = scManager.code (tabId);
+		ri.add_reply_service_context (sc , true);
+		System.out.println ("ServerInter.send_reply: " + tabByteSC);
 	}
 
 	/**

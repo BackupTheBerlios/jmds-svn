@@ -87,5 +87,32 @@ public class Convertor {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * @param code
+	 * @return a table of byte corresponding to the argument code
+	 */
+	public static byte [] shortArrayToByteArray (short [] code)
+	{
+		byte[] tmp = new byte[code.length];
+		for(int i=0; i<code.length; i++) {
+			Short s = new Short(code[i]);
+			tmp[i]=s.byteValue();
+		}
+		return tmp;
+	}
+
+	/**
+	 * @param requestId
+	 * @return the table of int
+	 */
+	public static int [] byteArrayToIntArray (byte [] requestId)
+	{
+		int[] tmp=null;
+		for(int i=0; i < requestId.length; i++) {
+			tmp[i] = new Byte (requestId[i]).intValue();
+		}
+		return tmp;
+	}
 }
 
