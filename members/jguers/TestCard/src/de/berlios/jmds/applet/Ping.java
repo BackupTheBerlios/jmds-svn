@@ -37,6 +37,9 @@ public class Ping extends Applet {
         register();
     }
 
+    /**
+     * @see javacard.framework.Applet#install(byte[], short, byte)
+     */
     public static void install(byte[] bArray, short bOffset, byte bLength) {
         new Ping();
     }
@@ -44,7 +47,7 @@ public class Ping extends Applet {
     /**
      * Méthide appelée à l'arrivée d'une trame APDU
      * 
-     * @param arg0
+     * @param apdu
      * @throws ISOException
      * 
      * @see javacard.framework.Applet#process(javacard.framework.APDU)
