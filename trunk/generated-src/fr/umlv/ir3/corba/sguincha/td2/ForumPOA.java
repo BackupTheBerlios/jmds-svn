@@ -22,6 +22,9 @@ public abstract class ForumPOA extends org.omg.PortableServer.Servant implements
 		_methods.put ("removeMessage" , new java.lang.Integer (5));
 	}
 
+	/**
+	 * @see org.omg.CORBA.portable.InvokeHandler#_invoke(java.lang.String, org.omg.CORBA.portable.InputStream, org.omg.CORBA.portable.ResponseHandler)
+	 */
 	public org.omg.CORBA.portable.OutputStream _invoke (String $method, org.omg.CORBA.portable.InputStream in, org.omg.CORBA.portable.ResponseHandler $rh)
 	{
 		org.omg.CORBA.portable.OutputStream out = null;
@@ -98,16 +101,26 @@ public abstract class ForumPOA extends org.omg.PortableServer.Servant implements
 	// Type-specific CORBA::Object operations
 	private static String []	__ids	= {"IDL:td2/Forum:1.0"};
 
+	/**
+	 * @see org.omg.PortableServer.Servant#_all_interfaces(org.omg.PortableServer.POA, byte[])
+	 */
 	public String [] _all_interfaces (org.omg.PortableServer.POA poa, byte [] objectId)
 	{
 		return (String []) __ids.clone ();
 	}
 
+	/**
+	 * @return the forum
+	 */
 	public Forum _this ()
 	{
 		return ForumHelper.narrow (super._this_object ());
 	}
 
+	/**
+	 * @param orb
+	 * @return a forum
+	 */
 	public Forum _this (org.omg.CORBA.ORB orb)
 	{
 		return ForumHelper.narrow (super._this_object (orb));

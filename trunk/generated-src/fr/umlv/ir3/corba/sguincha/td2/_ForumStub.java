@@ -9,6 +9,14 @@ package fr.umlv.ir3.corba.sguincha.td2;
 public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.umlv.ir3.corba.sguincha.td2.Forum
 {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
+	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#theme()
+	 */
 	public String theme ()
 	{
 		org.omg.CORBA.portable.InputStream $in = null;
@@ -35,6 +43,9 @@ public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.
 		}
 	} // theme
 
+	/**
+	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#moderator()
+	 */
 	public String moderator ()
 	{
 		org.omg.CORBA.portable.InputStream $in = null;
@@ -61,6 +72,9 @@ public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.
 		}
 	} // moderator
 
+	/**
+	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#postMessage(fr.umlv.ir3.corba.sguincha.td2.Message)
+	 */
 	public boolean postMessage (fr.umlv.ir3.corba.sguincha.td2.Message m)
 	{
 		org.omg.CORBA.portable.InputStream $in = null;
@@ -88,6 +102,9 @@ public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.
 		}
 	} // postMessage
 
+	/**
+	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#getMessage(java.lang.String)
+	 */
 	public fr.umlv.ir3.corba.sguincha.td2.Message getMessage (String title)
 	{
 		org.omg.CORBA.portable.InputStream $in = null;
@@ -115,6 +132,9 @@ public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.
 		}
 	} // getMessage
 
+	/**
+	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#getMessages()
+	 */
 	public fr.umlv.ir3.corba.sguincha.td2.Message[] getMessages ()
 	{
 		org.omg.CORBA.portable.InputStream $in = null;
@@ -141,6 +161,9 @@ public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.
 		}
 	} // getMessages
 
+	/**
+	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#removeMessage(java.lang.String)
+	 */
 	public boolean removeMessage (String title)
 	{
 		org.omg.CORBA.portable.InputStream $in = null;
@@ -171,6 +194,9 @@ public class _ForumStub extends org.omg.CORBA.portable.ObjectImpl implements fr.
 	// Type-specific CORBA::Object operations
 	private static String []	__ids	= {"IDL:td2/Forum:1.0"};
 
+	/**
+	 * @see org.omg.CORBA.portable.ObjectImpl#_ids()
+	 */
 	public String [] _ids ()
 	{
 		return (String []) __ids.clone ();

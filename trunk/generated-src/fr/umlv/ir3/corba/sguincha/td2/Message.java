@@ -8,15 +8,40 @@ package fr.umlv.ir3.corba.sguincha.td2;
 
 public final class Message implements org.omg.CORBA.portable.IDLEntity
 {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 1L;
+	/**
+	 * Comment for <code>title</code>
+	 */
 	public String	title	= null;
+	/**
+	 * Comment for <code>author</code>
+	 */
 	public String	author	= null;
+	/**
+	 * Comment for <code>date</code>
+	 */
 	public String	date	= null;
+	/**
+	 * Comment for <code>body</code>
+	 */
 	public String	body	= null;
 
+	/**
+	 * 
+	 */
 	public Message ()
 	{
 	} // ctor
 
+	/**
+	 * @param _title
+	 * @param _author
+	 * @param _date
+	 * @param _body
+	 */
 	public Message (String _title, String _author, String _date, String _body)
 	{
 		title = _title;

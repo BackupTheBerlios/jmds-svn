@@ -8,15 +8,36 @@ package fr.umlv.ir3.corba.sguincha.td2;
 
 public interface ForumOperations
 {
+	/**
+	 * @return the theme
+	 */
 	String theme ();
 
+	/**
+	 * @return a String 
+	 */
 	String moderator ();
 
+	/**
+	 * @param m
+	 * @return if the operation successfully or not
+	 */
 	boolean postMessage (fr.umlv.ir3.corba.sguincha.td2.Message m);
 
+	/**
+	 * @param title
+	 * @return a message
+	 */
 	fr.umlv.ir3.corba.sguincha.td2.Message getMessage (String title);
 
+	/**
+	 * @return the table of Message
+	 */
 	fr.umlv.ir3.corba.sguincha.td2.Message[] getMessages ();
 
+	/**
+	 * @param title
+	 * @return if the remove operation successfully or not
+	 */
 	boolean removeMessage (String title);
 } // interface ForumOperations

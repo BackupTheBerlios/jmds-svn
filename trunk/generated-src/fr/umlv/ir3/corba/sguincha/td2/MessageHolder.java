@@ -8,27 +8,45 @@ package fr.umlv.ir3.corba.sguincha.td2;
 
 public final class MessageHolder implements org.omg.CORBA.portable.Streamable
 {
+	/**
+	 * Comment for <code>value</code>
+	 */
 	public fr.umlv.ir3.corba.sguincha.td2.Message	value	= null;
 
+	/**
+	 * 
+	 */
 	public MessageHolder ()
 	{
 	}
 
+	/**
+	 * @param initialValue
+	 */
 	public MessageHolder (fr.umlv.ir3.corba.sguincha.td2.Message initialValue)
 	{
 		value = initialValue;
 	}
 
+	/**
+	 * @see org.omg.CORBA.portable.Streamable#_read(org.omg.CORBA.portable.InputStream)
+	 */
 	public void _read (org.omg.CORBA.portable.InputStream i)
 	{
 		value = fr.umlv.ir3.corba.sguincha.td2.MessageHelper.read (i);
 	}
 
+	/**
+	 * @see org.omg.CORBA.portable.Streamable#_write(org.omg.CORBA.portable.OutputStream)
+	 */
 	public void _write (org.omg.CORBA.portable.OutputStream o)
 	{
 		fr.umlv.ir3.corba.sguincha.td2.MessageHelper.write (o , value);
 	}
 
+	/**
+	 * @see org.omg.CORBA.portable.Streamable#_type()
+	 */
 	public org.omg.CORBA.TypeCode _type ()
 	{
 		return fr.umlv.ir3.corba.sguincha.td2.MessageHelper.type ();

@@ -10,6 +10,10 @@ abstract public class MessageSetHelper
 {
 	private static String	_id	= "IDL:td2/MessageSet:1.0";
 
+	/**
+	 * @param a
+	 * @param that
+	 */
 	public static void insert (org.omg.CORBA.Any a, fr.umlv.ir3.corba.sguincha.td2.Message[] that)
 	{
 		org.omg.CORBA.portable.OutputStream out = a.create_output_stream ();
@@ -18,6 +22,10 @@ abstract public class MessageSetHelper
 		a.read_value (out.create_input_stream () , type ());
 	}
 
+	/**
+	 * @param a 
+	 * @return a table of message
+	 */
 	public static fr.umlv.ir3.corba.sguincha.td2.Message[] extract (org.omg.CORBA.Any a)
 	{
 		return read (a.create_input_stream ());
@@ -25,6 +33,9 @@ abstract public class MessageSetHelper
 
 	private static org.omg.CORBA.TypeCode	__typeCode	= null;
 
+	/**
+	 * @return a TypeCode
+	 */
 	synchronized public static org.omg.CORBA.TypeCode type ()
 	{
 		if (__typeCode == null)
@@ -36,11 +47,18 @@ abstract public class MessageSetHelper
 		return __typeCode;
 	}
 
+	/**
+	 * @return a String ID
+	 */
 	public static String id ()
 	{
 		return _id;
 	}
 
+	/**
+	 * @param istream
+	 * @return a table of Message
+	 */
 	public static fr.umlv.ir3.corba.sguincha.td2.Message[] read (org.omg.CORBA.portable.InputStream istream)
 	{
 		fr.umlv.ir3.corba.sguincha.td2.Message value[] = null;
@@ -51,6 +69,10 @@ abstract public class MessageSetHelper
 		return value;
 	}
 
+	/**
+	 * @param ostream
+	 * @param value
+	 */
 	public static void write (org.omg.CORBA.portable.OutputStream ostream, fr.umlv.ir3.corba.sguincha.td2.Message[] value)
 	{
 		ostream.write_long (value.length);

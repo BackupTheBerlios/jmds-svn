@@ -10,6 +10,10 @@ abstract public class ForumHelper
 {
 	private static String	_id	= "IDL:td2/Forum:1.0";
 
+	/**
+	 * @param a
+	 * @param that
+	 */
 	public static void insert (org.omg.CORBA.Any a, fr.umlv.ir3.corba.sguincha.td2.Forum that)
 	{
 		org.omg.CORBA.portable.OutputStream out = a.create_output_stream ();
@@ -18,6 +22,10 @@ abstract public class ForumHelper
 		a.read_value (out.create_input_stream () , type ());
 	}
 
+	/**
+	 * @param a
+	 * @return a Forum
+	 */
 	public static fr.umlv.ir3.corba.sguincha.td2.Forum extract (org.omg.CORBA.Any a)
 	{
 		return read (a.create_input_stream ());
@@ -25,6 +33,9 @@ abstract public class ForumHelper
 
 	private static org.omg.CORBA.TypeCode	__typeCode	= null;
 
+	/**
+	 * @return the TypeCOde
+	 */
 	synchronized public static org.omg.CORBA.TypeCode type ()
 	{
 		if (__typeCode == null)
@@ -34,21 +45,36 @@ abstract public class ForumHelper
 		return __typeCode;
 	}
 
+	/**
+	 * @return the string id
+	 */
 	public static String id ()
 	{
 		return _id;
 	}
 
+	/**
+	 * @param istream
+	 * @return a forum
+	 */
 	public static fr.umlv.ir3.corba.sguincha.td2.Forum read (org.omg.CORBA.portable.InputStream istream)
 	{
 		return narrow (istream.read_Object (_ForumStub.class));
 	}
 
+	/**
+	 * @param ostream
+	 * @param value
+	 */
 	public static void write (org.omg.CORBA.portable.OutputStream ostream, fr.umlv.ir3.corba.sguincha.td2.Forum value)
 	{
 		ostream.write_Object ((org.omg.CORBA.Object) value);
 	}
 
+	/**
+	 * @param obj
+	 * @return a forum
+	 */
 	public static fr.umlv.ir3.corba.sguincha.td2.Forum narrow (org.omg.CORBA.Object obj)
 	{
 		if (obj == null)
@@ -66,6 +92,10 @@ abstract public class ForumHelper
 		}
 	}
 
+	/**
+	 * @param obj
+	 * @return a forum
+	 */
 	public static fr.umlv.ir3.corba.sguincha.td2.Forum unchecked_narrow (org.omg.CORBA.Object obj)
 	{
 		if (obj == null)
