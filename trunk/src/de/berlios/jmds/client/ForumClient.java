@@ -9,9 +9,10 @@ import java.util.Properties;
 
 import org.omg.CORBA.ORB;
 
-import fr.umlv.ir3.corba.sguincha.td2.Forum;
-import fr.umlv.ir3.corba.sguincha.td2.ForumHelper;
-import fr.umlv.ir3.corba.sguincha.td2.Message;
+import de.berlios.jmds.generated.Forum;
+import de.berlios.jmds.generated.ForumHelper;
+import de.berlios.jmds.generated.Message;
+
 
 
 /**

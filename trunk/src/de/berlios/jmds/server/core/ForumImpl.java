@@ -5,8 +5,9 @@ package de.berlios.jmds.server.core;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import fr.umlv.ir3.corba.sguincha.td2.ForumPOA;
-import fr.umlv.ir3.corba.sguincha.td2.Message;
+import de.berlios.jmds.generated.ForumPOA;
+import de.berlios.jmds.generated.Message;
+
 
 
 /**
@@ -31,7 +32,7 @@ public class ForumImpl extends ForumPOA
 	}
 
 	/**
-	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#theme()
+	 * @see de.berlios.jmds.generated.ForumOperations#theme()
 	 */
 	public String theme ()
 	{
@@ -40,7 +41,7 @@ public class ForumImpl extends ForumPOA
 
 	
 	/**
-	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#moderator()
+	 * @see de.berlios.jmds.generated.ForumOperations#moderator()
 	 */
 	public String moderator ()
 	{
@@ -48,7 +49,7 @@ public class ForumImpl extends ForumPOA
 	}
 
 	/**
-	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#postMessage(fr.umlv.ir3.corba.sguincha.td2.Message)
+	 * @see de.berlios.jmds.generated.ForumOperations#postMessage(de.berlios.jmds.generated.Message)
 	 */
 	public boolean postMessage (Message m)
 	{
@@ -58,7 +59,7 @@ public class ForumImpl extends ForumPOA
 	}
 
 	/**
-	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#getMessage(java.lang.String)
+	 * @see de.berlios.jmds.generated.ForumOperations#getMessage(java.lang.String)
 	 */
 	public Message getMessage (String title)
 	{
@@ -66,7 +67,7 @@ public class ForumImpl extends ForumPOA
 	}
 
 	/**
-	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#getMessages()
+	 * @see de.berlios.jmds.generated.ForumOperations#getMessages()
 	 */
 	public Message [] getMessages ()
 	{
@@ -74,7 +75,7 @@ public class ForumImpl extends ForumPOA
 	}
 
 	/**
-	 * @see fr.umlv.ir3.corba.sguincha.td2.ForumOperations#removeMessage(java.lang.String)
+	 * @see de.berlios.jmds.generated.ForumOperations#removeMessage(java.lang.String)
 	 */
 	public boolean removeMessage (String title)
 	{
