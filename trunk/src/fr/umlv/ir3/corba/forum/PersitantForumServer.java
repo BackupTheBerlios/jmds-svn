@@ -42,6 +42,10 @@ public class PersitantForumServer {
 //        props.put( "org.omg.CORBA.ORBSingletonClass", "org.openorb.CORBA.ORBSingleton" );
 //        props.put( "verbose", "5" );
         props.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.server.ServerORBInitializer" , "");
+        props.put ("com.sun.CORBA.POA.ORBPersistentServerPort" , "12345");
+        props.put ("com.sun.CORBA.POA.ORBServerId" , "1");
+        props.put ("com.sun.CORBA.POA.ORBInitialPort" , "1234");
+        props.put ("com.sun.CORBA.POA.ORBInitialHost" , "localhost");
 
 		ORB orb = ORB.init(args, props);
 		POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
@@ -53,6 +57,7 @@ public class PersitantForumServer {
 		};
 		
 		POA forumPOA = rootPOA.create_POA("forumPOA", rootPOA.the_POAManager(), policies);
+		rootPOA.the_POAManager().activate();
 				
 		ForumImpl forum = new ForumImpl("Forum de Test", "GG");
 		
@@ -65,10 +70,7 @@ public class PersitantForumServer {
         NamingContextExt nc = NamingContextExtHelper.narrow(ns) ;
         
         NameComponent[] name = nc.to_name("jmdsForum");
-        
         nc.rebind(name,obj);
-        
-		rootPOA.the_POAManager().activate();
         
         System.out.println("Server ready");
         

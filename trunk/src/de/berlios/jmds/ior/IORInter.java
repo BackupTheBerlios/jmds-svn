@@ -5,8 +5,11 @@
  */
 package de.berlios.jmds.ior;
 
+import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.IORInterceptor;
+
+import com.sun.corba.se.impl.oa.poa.POACurrent;
 
 
 /**
@@ -18,18 +21,26 @@ import org.omg.PortableInterceptor.IORInterceptor;
  */
 public class IORInter extends org.omg.CORBA.LocalObject implements IORInterceptor
 {
-
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 3257852086392993079L;
 
 	/**
 	 * @see org.omg.PortableInterceptor.IORInterceptorOperations#establish_components(org.omg.PortableInterceptor.IORInfo)
 	 */
 	public void establish_components (IORInfo info)
 	{
-		// TODO Auto-generated method stub
+		try {
+			// TODO Auto-generated method stub
+			POACurrent current = (POACurrent) _orb().resolve_initial_references("POACurrent");
+			
+			//current.get_POA().reference_to_id(info.)
+		} catch (InvalidName e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 
