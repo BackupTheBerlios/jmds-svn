@@ -9,8 +9,6 @@ import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.ForwardRequest;
 
-import com.sun.corba.se.spi.ior.iiop.GIOPVersion;
-
 
 /**
  * @author sguincha go to Window - Preferences - Java - Code Style - Code
@@ -29,11 +27,10 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements ClientRequ
 	 */
 	public void send_request (ClientRequestInfo ri) throws ForwardRequest
 	{
-		GIOPVersion version;
 		ServiceContext sc = new ServiceContext ();
-		sc.context_data = new byte [65];
-
-		ri.add_request_service_context (sc , true);
+		byte[] scData = "toto".getBytes();
+		sc.context_data = scData;
+		ri.add_request_service_context (sc, true);
 		System.out.println ("ClientInter.send request: " + ri.operation ());
 	}
 
@@ -50,7 +47,10 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements ClientRequ
 	 */
 	public void receive_reply (ClientRequestInfo ri)
 	{
-		System.out.println ("ClientInter.receive reply: " + ri.operation ());
+		ServiceContext sc = ri.get_reply_service_context(0);
+		String sData = new String(sc.context_data);
+		System.out.println ("ClientInter.receive reply: " + sData);
+		
 	}
 
 	/**

@@ -16,6 +16,8 @@ public class Convertor {
     
     /**
      * DOCME
+     * @param value 
+     * @return a table of short
      */
     public final static short[] stringToShortArray(String value) {
         short shortKey[] = new short[(value.length() / 2)];
@@ -40,6 +42,8 @@ public class Convertor {
     
     /**
      * DOCME
+     * @param value 
+     * @return a table of int containing the stirng
      */
     public static int[] stringToIntArray(String value) {
         int intKey[] = new int[(value.length() / 2)];
@@ -62,5 +66,18 @@ public class Convertor {
         }
         return intKey;
     }
+
+	/**
+	 * @param context_data
+	 * @return string of the byte table
+	 */
+	public static String byteToString (byte [] context_data)
+	{
+		StringBuffer sb = new StringBuffer();
+		for(int i=0; i < context_data.length; i++) {
+			sb.append(context_data[i]);
+		}
+		return sb.toString();
+	}
 }
 

@@ -4,6 +4,7 @@
  */
 package de.berlios.jmds.server.core;
 
+import org.omg.IOP.ServiceContext;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
@@ -26,7 +27,11 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
+		ServiceContext sc = ri.get_request_service_context (0);
+		String sData = new String (sc.context_data);
+		System.out.println ("ServerInter.receive request_SC: " + sData);
+		sc.context_data = "titi".getBytes ();
+		ri.add_reply_service_context (sc , true);
 
 	}
 
@@ -43,6 +48,9 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_reply (ServerRequestInfo ri)
 	{
+		ServiceContext sc = ri.get_request_service_context (0);
+		sc.context_data = "titi".getBytes ();
+		ri.add_reply_service_context (sc , true);
 		System.out.println ("ServerInter.send_reply: " + ri.operation ());
 
 	}

@@ -23,11 +23,20 @@ import de.berlios.jmds.server.core.ForumImpl;
 public class ForumServer
 {
 
+	/**
+	 * @param args
+	 * @throws InvalidName
+	 * @throws ServantAlreadyActive
+	 * @throws ObjectNotActive
+	 * @throws WrongPolicy
+	 * @throws IOException
+	 * @throws AdapterInactive
+	 */
 	public static void main (String [] args) throws InvalidName, ServantAlreadyActive, ObjectNotActive, WrongPolicy, IOException, AdapterInactive
 	{
 		/* Initialisation de l'ORB */
 		Properties prop = new Properties ();
-		prop.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.core.MonServerORBInitializer" , "");
+		prop.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.server.core.ServerORBInitializer" , "");
 		ORB orb = ORB.init (args , prop);
 
 		/* Récupération de référence de l'adaptateur d'objet racine */

@@ -20,12 +20,16 @@ import fr.umlv.ir3.corba.sguincha.td2.Message;
 public class ForumClient
 {
 
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main (String [] args) throws IOException
 	{
 
 		/* initialisation de l'ORB */
 		Properties prop = new Properties ();
-		prop.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.core.MonClientORBInitializer" , "");
+		prop.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.client.core.ClientORBInitializer" , "");
 		ORB orb = ORB.init (args , prop);
 		/* Récupération de l'id de l'objet servant */
 		BufferedReader buffer = new BufferedReader (new FileReader ("ObjectRef"));
@@ -49,13 +53,14 @@ public class ForumClient
 			{
 				case 'a' :
 				{
-					System.out.print ("Votre nom: ");
+					/*System.out.print ("Votre nom: ");
 					String auth = in.readLine ();
 					System.out.print ("Titre du message: ");
 					String title = in.readLine ();
 					System.out.print ("Message: ");
 					String mess = in.readLine ();
-					forumProxy.postMessage (new Message (title, auth, (new Date ()).toString (), mess));
+					forumProxy.postMessage (new Message (title, auth, (new Date ()).toString (), mess));*/
+					forumProxy.postMessage (new Message ("toto", "titi", (new Date ()).toString (), "tutu"));
 				}
 					break;
 
