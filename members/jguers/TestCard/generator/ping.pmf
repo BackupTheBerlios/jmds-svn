@@ -1,0 +1,11 @@
+[PrgMaker]
+Package=de.berlios.jmds.test
+PackageAID=112233445566
+OutputDir=d:\1G2K - SOPRA\IR3\Corba\jmds\SVN\members\jguers\TestCard\applets
+ExportDir=c:\Program Files\Schlumberger\Smart Cards and Terminals\Cyberflex Access Kits\v4\Toolkit\PRGMaker\Export Files
+Version=1.0
+ClassDir=d:\1G2K - SOPRA\IR3\Corba\jmds\SVN\members\jguers\TestCard\classes
+[Applets]
+NumApplets=1
+Applet1=Ping.class
+Applet1AID=11223344556677
