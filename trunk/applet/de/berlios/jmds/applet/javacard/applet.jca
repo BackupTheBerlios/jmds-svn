@@ -1,5 +1,5 @@
 // converted by version 1.3
-// on Tue Mar 01 10:47:35 CET 2005
+// on Wed Mar 02 01:01:45 CET 2005
 
 .package de/berlios/jmds/applet {
 	.aid 0x11:0x22:0x33:0x44:0x55:0x66;
@@ -13,7 +13,6 @@
 
 	.applet {
 		0x11:0x22:0x33:0x44:0x55:0x66:0x77 SCAppletWithKey;
-		0x11:0x22:0x33:0x44:0x55:0x66:0x88 SCApplet;
 	}
 
 	.constantPool {
@@ -26,15 +25,15 @@
 		// 3
 		instanceFieldRef byte SCApplet/key;
 		// 4
-		instanceFieldRef 1.8 SCAppletWithKey/sessionKey;
+		instanceFieldRef byte[] SCAppletWithKey/userID;
 		// 5
-		instanceFieldRef byte[] SCAppletWithKey/tmpBuff;
+		instanceFieldRef byte[] SCAppletWithKey/sessionKey;
 		// 6
-		instanceFieldRef 1.16 SCAppletWithKey/userKeyPair;
-		// 7
 		instanceFieldRef 1.9 SCAppletWithKey/serverKey;
-		// 8
+		// 7
 		instanceFieldRef 2.1 SCAppletWithKey/cipher;
+		// 8
+		instanceFieldRef 1.14 SCAppletWithKey/random;
 		// 9
 		virtualMethodRef 0.10.1()[B;		// javacard/framework/APDU.getBuffer()[B
 		// 10
@@ -60,65 +59,53 @@
 			.descriptor	Ljavacard/security/RandomData;	1.14;
 
 		// 19
-		classRef 1.16;		// javacard/security/KeyPair
-		// 20
-		staticMethodRef 1.16.0(BS)V;		// javacard/security/KeyPair.<init>(BS)V
-		// 21
-		virtualMethodRef 0.3.1()V;		// javacard/framework/Applet.register()V
-		// 22
-		virtualMethodRef 1.16.1()V;		// javacard/security/KeyPair.genKeyPair()V
-		// 23
 		staticMethodRef 1.13.0(BSZ)Ljavacard/security/Key;;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
 			.descriptor	Ljavacard/security/Key;	1.0;
 
-		// 24
+		// 20
 		classRef 1.9;		// javacard/security/RSAPublicKey
-		// 25
-		classRef SCApplet;
-		// 26
+		// 21
+		virtualMethodRef 0.3.1()V;		// javacard/framework/Applet.register()V
+		// 22
 		staticMethodRef 2.1.0(BZ)Ljavacardx/crypto/Cipher;;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
 			.descriptor	Ljavacardx/crypto/Cipher;	2.1;
 
-		// 27
+		// 23
+		classRef SCApplet;
+		// 24
 		staticMethodRef SCApplet/<init>()V;
-		// 28
+		// 25
 		classRef SCAppletWithKey;
-		// 29
+		// 26
 		staticMethodRef SCAppletWithKey/<init>()V;
-		// 30
+		// 27
 		staticMethodRef SCAppletWithKey/encode(Ljavacard/framework/APDU;)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
+		// 28
+		staticMethodRef SCAppletWithKey/decode(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+		// 29
+		staticMethodRef SCAppletWithKey/setUserID(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+		// 30
+		staticMethodRef SCAppletWithKey/setSeverKeyExp(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 31
-		staticMethodRef SCAppletWithKey/getPubKeyExponentSize(Ljavacard/framework/APDU;)V;
+		staticMethodRef SCAppletWithKey/setServerKeyMod(Ljavacard/framework/APDU;)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 		// 32
-		staticMethodRef SCAppletWithKey/getPubKeyExponent(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
+		classRef 1.0;		// javacard/security/Key
 		// 33
-		staticMethodRef SCAppletWithKey/getPubKeyModulusSize(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 34
-		staticMethodRef SCAppletWithKey/getPubKeyModulus(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 35
-		virtualMethodRef 1.16.2()Ljavacard/security/PrivateKey;;		// javacard/security/KeyPair.getPrivate()Ljavacard/security/PrivateKey;
-			.descriptor	Ljavacard/security/PrivateKey;	1.2;
-
-		// 36
 		virtualMethodRef 2.1.3(Ljavacard/security/Key;B)V;		// javacardx/crypto/Cipher.init(Ljavacard/security/Key;B)V
 			.descriptor	Ljavacard/security/Key;	1.0;
 
-		// 37
+		// 34
 		virtualMethodRef 2.1.1([BSS[BS)S;		// javacardx/crypto/Cipher.doFinal([BSS[BS)S
-		// 38
-		virtualMethodRef 1.16.3()Ljavacard/security/PublicKey;;		// javacard/security/KeyPair.getPublic()Ljavacard/security/PublicKey;
-			.descriptor	Ljavacard/security/PublicKey;	1.3;
-
 	}
 
 	.class public SCApplet 0 extends 0.3 {		// extends javacard/framework/Applet
@@ -130,9 +117,7 @@
 			private byte key 3;		// B
 			private static final byte CLA_SECURITY = 105;		// B
 			private static final byte INS_CODE = 16;		// B
-			private static final byte INS_GET_CODE = 17;		// B
 			private static final byte INS_DECODE = 48;		// B
-			private static final byte INS_GET_DECODE = 51;		// B
 			private static final byte INS_SET_USER_KEY = 119;		// B
 			private static final short BUFFER_LENGTH = 32;		// S
 		}
@@ -181,8 +166,8 @@
 			.stack 1;
 			.locals 0;
 
-				L0:	new 25;		// de/berlios/jmds/applet/SCApplet
-					invokespecial 27;		// de/berlios/jmds/applet/SCApplet.<init>()V
+				L0:	new 23;		// de/berlios/jmds/applet/SCApplet
+					invokespecial 24;		// de/berlios/jmds/applet/SCApplet.<init>()V
 					return;
 		}
 
@@ -274,19 +259,19 @@
 	.class public SCAppletWithKey 1 extends 0.3 {		// extends javacard/framework/Applet
 
 		.fields {
-			private byte[] tmpBuff 0;		// [B
-			private 1.16 userKeyPair 1;		// Ljavacard/security/KeyPair;
-			private 1.9 serverKey 2;		// Ljavacard/security/RSAPublicKey;
-			private 1.8 sessionKey 3;		// Ljavacard/security/RSAPrivateKey;
+			private 1.14 random 0;		// Ljavacard/security/RandomData;
+			private 1.9 serverKey 1;		// Ljavacard/security/RSAPublicKey;
+			private byte[] sessionKey 2;		// [B
+			private byte[] userID 3;		// [B
 			private 2.1 cipher 4;		// Ljavacardx/crypto/Cipher;
 			private static final byte CLA_SECURITY = 105;		// B
 			private static final byte INS_CODE = 16;		// B
 			private static final byte INS_DECODE = 32;		// B
-			private static final byte INS_GETKEY_MOD_SIZE = 64;		// B
-			private static final byte INS_GETKEY_MOD_DATA = 65;		// B
-			private static final byte INS_GETKEY_EXP_SIZE = 66;		// B
-			private static final byte INS_GETKEY_EXP_DATA = 67;		// B
-			private static final short BUFFER_LENGTH = 255;		// S
+			private static final byte INS_SET_USER = 48;		// B
+			private static final byte INS_SET_SERVERKEY_MOD = 68;		// B
+			private static final byte INS_SET_SERVERKEY_EXP = 102;		// B
+			private static final short SESSIONS_KEY_LENGTH = 5;		// S
+			private static final short USER_ID_LENGTH = 10;		// S
 		}
 
 		.publicMethodTable 7 {
@@ -304,39 +289,34 @@
 		}
 
 		.method protected <init>()V 0 {
-			.stack 5;
+			.stack 4;
 			.locals 0;
 
 				L0:	aload_0;
 					invokespecial 17;		// javacard/framework/Applet.<init>()V
 					aload_0;
 					aconst_null;
-					putfield_a 4;		// reference de/berlios/jmds/applet/SCAppletWithKey.sessionKey
+					putfield_a 4;		// reference de/berlios/jmds/applet/SCAppletWithKey.userID
 					aload_0;
-					sspush 256;
+					sconst_5;
 					newarray 11;
-					putfield_a 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					aload_0;
-					new 19;		// javacard/security/KeyPair
-					dup;
-					sconst_1;
-					sspush 512;
-					invokespecial 20;		// javacard/security/KeyPair.<init>(BS)V
-					putfield_a 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					invokevirtual 22;		// javacard/security/KeyPair.genKeyPair()V
+					putfield_a 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.sessionKey
 					aload_0;
 					sconst_4;
 					sspush 512;
 					sconst_1;
-					invokestatic 23;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
-					checkcast 0 24;		// T_CLASSORINTERFACE javacard/security/RSAPublicKey
-					putfield_a 7;		// reference de/berlios/jmds/applet/SCAppletWithKey.serverKey
+					invokestatic 19;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
+					checkcast 0 20;		// T_CLASSORINTERFACE javacard/security/RSAPublicKey
+					putfield_a 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.serverKey
 					aload_0;
 					bspush 10;
 					sconst_0;
-					invokestatic 26;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
-					putfield_a 8;		// reference de/berlios/jmds/applet/SCAppletWithKey.cipher
+					invokestatic 22;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
+					putfield_a 7;		// reference de/berlios/jmds/applet/SCAppletWithKey.cipher
+					aload_0;
+					sconst_2;
+					invokestatic 18;		// javacard/security/RandomData.getInstance(B)Ljavacard/security/RandomData;
+					putfield_a 8;		// reference de/berlios/jmds/applet/SCAppletWithKey.random
 					aload_0;
 					invokevirtual 21;		// javacard/framework/Applet.register()V
 					return;
@@ -346,8 +326,8 @@
 			.stack 1;
 			.locals 0;
 
-				L0:	new 28;		// de/berlios/jmds/applet/SCAppletWithKey
-					invokespecial 29;		// de/berlios/jmds/applet/SCAppletWithKey.<init>()V
+				L0:	new 25;		// de/berlios/jmds/applet/SCAppletWithKey
+					invokespecial 26;		// de/berlios/jmds/applet/SCAppletWithKey.<init>()V
 					return;
 		}
 
@@ -364,37 +344,151 @@
 					sconst_0;
 					baload;
 					bspush 105;
-					if_scmpne L8;
+					if_scmpne L7;
 				L1:	aload_2;
 					sconst_1;
 					baload;
-					slookupswitch L8 6 16 L2 32 L3 64 L7 65 L6 66 L5 67 L4;
+					slookupswitch L7 5 16 L2 32 L3 48 L4 68 L6 102 L5;
 				L2:	aload_0;
 					aload_1;
-					invokespecial 30;		// de/berlios/jmds/applet/SCAppletWithKey.encode(Ljavacard/framework/APDU;)V
-					goto L8;
-				L3:	goto L8;
+					invokespecial 27;		// de/berlios/jmds/applet/SCAppletWithKey.encode(Ljavacard/framework/APDU;)V
+					goto L7;
+				L3:	aload_0;
+					aload_1;
+					invokespecial 28;		// de/berlios/jmds/applet/SCAppletWithKey.decode(Ljavacard/framework/APDU;)V
+					goto L7;
 				L4:	aload_0;
 					aload_1;
-					invokespecial 31;		// de/berlios/jmds/applet/SCAppletWithKey.getPubKeyExponentSize(Ljavacard/framework/APDU;)V
-					goto L8;
+					invokespecial 29;		// de/berlios/jmds/applet/SCAppletWithKey.setUserID(Ljavacard/framework/APDU;)V
+					goto L7;
 				L5:	aload_0;
 					aload_1;
-					invokespecial 32;		// de/berlios/jmds/applet/SCAppletWithKey.getPubKeyExponent(Ljavacard/framework/APDU;)V
-					goto L8;
+					invokespecial 30;		// de/berlios/jmds/applet/SCAppletWithKey.setSeverKeyExp(Ljavacard/framework/APDU;)V
+					goto L7;
 				L6:	aload_0;
 					aload_1;
-					invokespecial 33;		// de/berlios/jmds/applet/SCAppletWithKey.getPubKeyModulusSize(Ljavacard/framework/APDU;)V
-					goto L8;
-				L7:	aload_0;
-					aload_1;
-					invokespecial 34;		// de/berlios/jmds/applet/SCAppletWithKey.getPubKeyModulus(Ljavacard/framework/APDU;)V
-				L8:	return;
+					invokespecial 31;		// de/berlios/jmds/applet/SCAppletWithKey.setServerKeyMod(Ljavacard/framework/APDU;)V
+				L7:	return;
 		}
 
 		.method private encode(Ljavacard/framework/APDU;)V {
 			.stack 6;
-			.locals 4;
+			.locals 5;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	getfield_a_this 4;		// reference de/berlios/jmds/applet/SCAppletWithKey.userID
+					ifnonnull L2;
+				L1:	sspush 27013;
+					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
+				L2:	getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.serverKey
+					invokeinterface 1 32 3;		// javacard/security/Key
+					ifne L4;
+				L3:	sspush 27013;
+					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
+				L4:	aload_1;
+					invokevirtual 12;		// javacard/framework/APDU.setIncomingAndReceive()S
+					sstore_2;
+					aload_1;
+					invokevirtual 9;		// javacard/framework/APDU.getBuffer()[B
+					astore_3;
+					sload_2;
+					sconst_5;
+					sadd;
+					bspush 10;
+					sadd;
+					newarray 11;
+					astore 4;
+					getfield_a_this 8;		// reference de/berlios/jmds/applet/SCAppletWithKey.random
+					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.sessionKey
+					sconst_0;
+					sconst_5;
+					invokevirtual 13;		// javacard/security/RandomData.generateData([BSS)V
+					sconst_0;
+					sstore 5;
+					goto L6;
+				L5:	aload 4;
+					sload 5;
+					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.sessionKey
+					sload 5;
+					baload;
+					bastore;
+					sinc 5 1;
+				L6:	sload 5;
+					sconst_5;
+					if_scmplt L5;
+				L7:	sconst_0;
+					sstore 5;
+					goto L9;
+				L8:	aload 4;
+					sload 5;
+					sconst_5;
+					sadd;
+					getfield_a_this 4;		// reference de/berlios/jmds/applet/SCAppletWithKey.userID
+					sload 5;
+					baload;
+					bastore;
+					sinc 5 1;
+				L9:	sload 5;
+					bspush 10;
+					if_scmplt L8;
+				L10:	sconst_0;
+					sstore 5;
+					goto L12;
+				L11:	aload 4;
+					sload 5;
+					sconst_5;
+					sadd;
+					bspush 10;
+					sadd;
+					aload_3;
+					sload 5;
+					sconst_5;
+					sadd;
+					baload;
+					bastore;
+					sinc 5 1;
+				L12:	sload 5;
+					sload_2;
+					if_scmplt L11;
+				L13:	getfield_a_this 7;		// reference de/berlios/jmds/applet/SCAppletWithKey.cipher
+					getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.serverKey
+					sconst_2;
+					invokevirtual 33;		// javacardx/crypto/Cipher.init(Ljavacard/security/Key;B)V
+					getfield_a_this 7;		// reference de/berlios/jmds/applet/SCAppletWithKey.cipher
+					aload 4;
+					sconst_0;
+					sload_2;
+					sconst_5;
+					sadd;
+					bspush 10;
+					sadd;
+					aload 4;
+					sconst_0;
+					invokevirtual 34;		// javacardx/crypto/Cipher.doFinal([BSS[BS)S
+					sstore 5;
+					aload_1;
+					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
+					sstore 6;
+					sload 6;
+					sload 5;
+					if_scmpge L15;
+				L14:	sspush 26368;
+					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
+				L15:	aload_1;
+					sload 5;
+					invokevirtual 15;		// javacard/framework/APDU.setOutgoingLength(S)V
+					aload_1;
+					aload 4;
+					sconst_0;
+					sload 5;
+					invokevirtual 16;		// javacard/framework/APDU.sendBytesLong([BSS)V
+					return;
+		}
+
+		.method private decode(Ljavacard/framework/APDU;)V {
+			.stack 5;
+			.locals 5;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
@@ -404,224 +498,112 @@
 					aload_1;
 					invokevirtual 9;		// javacard/framework/APDU.getBuffer()[B
 					astore_3;
-					getfield_a_this 8;		// reference de/berlios/jmds/applet/SCAppletWithKey.cipher
-					getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					invokevirtual 35;		// javacard/security/KeyPair.getPrivate()Ljavacard/security/PrivateKey;
-					sconst_2;
-					invokevirtual 36;		// javacardx/crypto/Cipher.init(Ljavacard/security/Key;B)V
-					getfield_a_this 8;		// reference de/berlios/jmds/applet/SCAppletWithKey.cipher
+					sconst_0;
+					sstore 4;
+					sload_2;
+					newarray 11;
+					astore 5;
+					sconst_0;
+					sstore 6;
+					goto L2;
+				L1:	aload 5;
+					sload 6;
+					aload_3;
+					sload 6;
+					sconst_5;
+					sadd;
+					baload;
+					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.sessionKey
+					sload 4;
+					baload;
+					sxor;
+					bastore;
+					sload 4;
+					sconst_1;
+					sadd;
+					sconst_5;
+					srem;
+					sstore 4;
+					sinc 6 1;
+				L2:	sload 6;
+					sload_2;
+					if_scmplt L1;
+				L3:	return;
+		}
+
+		.method private setServerKeyMod(Ljavacard/framework/APDU;)V {
+			.stack 4;
+			.locals 2;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	aload_1;
+					invokevirtual 12;		// javacard/framework/APDU.setIncomingAndReceive()S
+					sstore_2;
+					aload_1;
+					invokevirtual 9;		// javacard/framework/APDU.getBuffer()[B
+					astore_3;
+					getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.serverKey
 					aload_3;
 					sconst_5;
 					sload_2;
-					aload_3;
-					sconst_5;
-					invokevirtual 37;		// javacardx/crypto/Cipher.doFinal([BSS[BS)S
-					sstore 4;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					sstore 5;
-					sload 5;
-					sload 4;
-					if_scmpge L2;
-				L1:	sspush 26368;
-					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
-				L2:	aload_1;
-					sload 4;
-					invokevirtual 15;		// javacard/framework/APDU.setOutgoingLength(S)V
-					aload_1;
-					aload_3;
-					sconst_5;
-					sload 4;
-					invokevirtual 16;		// javacard/framework/APDU.sendBytesLong([BSS)V
+					invokeinterface 4 20 7;		// javacard/security/RSAPublicKey
 					return;
 		}
 
-		.method private getPubKeyModulusSize(Ljavacard/framework/APDU;)V {
+		.method private setSeverKeyExp(Ljavacard/framework/APDU;)V {
 			.stack 4;
-			.locals 4;
+			.locals 2;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
 					invokevirtual 12;		// javacard/framework/APDU.setIncomingAndReceive()S
-					pop;
+					sstore_2;
 					aload_1;
 					invokevirtual 9;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					sstore_3;
-					sload_3;
-					sconst_2;
-					if_scmpge L2;
-				L1:	sspush 26368;
-					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
-				L2:	getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					invokevirtual 38;		// javacard/security/KeyPair.getPublic()Ljavacard/security/PublicKey;
-					checkcast 0 24;		// T_CLASSORINTERFACE javacard/security/RSAPublicKey
-					astore 4;
-					aload 4;
-					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					sconst_0;
-					invokeinterface 3 24 5;		// javacard/security/RSAPublicKey
-					sstore 5;
-					aload_2;
-					sconst_0;
-					sload 5;
-					sspush 256;
-					sdiv;
-					s2b;
-					bastore;
-					aload_2;
-					sconst_1;
-					sload 5;
-					sspush 256;
-					srem;
-					s2b;
-					bastore;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					pop;
-					aload_1;
-					sconst_2;
-					invokevirtual 15;		// javacard/framework/APDU.setOutgoingLength(S)V
-					aload_1;
-					aload_2;
-					sconst_0;
-					sconst_2;
-					invokevirtual 16;		// javacard/framework/APDU.sendBytesLong([BSS)V
+					astore_3;
+					getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.serverKey
+					aload_3;
+					sconst_5;
+					sload_2;
+					invokeinterface 4 20 6;		// javacard/security/RSAPublicKey
 					return;
 		}
 
-		.method private getPubKeyModulus(Ljavacard/framework/APDU;)V {
-			.stack 4;
+		.method private setUserID(Ljavacard/framework/APDU;)V {
+			.stack 5;
 			.locals 3;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					invokevirtual 38;		// javacard/security/KeyPair.getPublic()Ljavacard/security/PublicKey;
-					checkcast 0 24;		// T_CLASSORINTERFACE javacard/security/RSAPublicKey
-					astore_2;
-					aload_2;
-					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					sconst_0;
-					invokeinterface 3 24 5;		// javacard/security/RSAPublicKey
-					sstore_3;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					sstore 4;
-					sload 4;
-					sload_3;
-					if_scmpge L2;
-				L1:	sspush 26368;
-					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
-				L2:	aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					pop;
-					aload_1;
-					sload_3;
-					invokevirtual 15;		// javacard/framework/APDU.setOutgoingLength(S)V
-					aload_1;
-					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					sconst_0;
-					sload_3;
-					invokevirtual 16;		// javacard/framework/APDU.sendBytesLong([BSS)V
-					return;
-		}
-
-		.method private getPubKeyExponentSize(Ljavacard/framework/APDU;)V {
-			.stack 4;
-			.locals 4;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
 					invokevirtual 12;		// javacard/framework/APDU.setIncomingAndReceive()S
-					pop;
+					sstore_2;
 					aload_1;
 					invokevirtual 9;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					sstore_3;
-					sload_3;
-					sconst_2;
-					if_scmpge L2;
+					astore_3;
+					sload_2;
+					bspush 10;
+					if_scmpeq L2;
 				L1:	sspush 26368;
 					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
-				L2:	getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					invokevirtual 38;		// javacard/security/KeyPair.getPublic()Ljavacard/security/PublicKey;
-					checkcast 0 24;		// T_CLASSORINTERFACE javacard/security/RSAPublicKey
-					astore 4;
-					aload 4;
-					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					sconst_0;
-					invokeinterface 3 24 4;		// javacard/security/RSAPublicKey
-					sstore 5;
-					aload_2;
-					sconst_0;
-					sload 5;
-					sspush 256;
-					sdiv;
-					s2b;
-					bastore;
-					aload_2;
-					sconst_1;
-					sload 5;
-					sspush 256;
-					srem;
-					s2b;
-					bastore;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					pop;
-					aload_1;
-					sconst_2;
-					invokevirtual 15;		// javacard/framework/APDU.setOutgoingLength(S)V
-					aload_1;
-					aload_2;
-					sconst_0;
-					sconst_2;
-					invokevirtual 16;		// javacard/framework/APDU.sendBytesLong([BSS)V
-					return;
-		}
-
-		.method private getPubKeyExponent(Ljavacard/framework/APDU;)V {
-			.stack 4;
-			.locals 3;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	getfield_a_this 6;		// reference de/berlios/jmds/applet/SCAppletWithKey.userKeyPair
-					invokevirtual 38;		// javacard/security/KeyPair.getPublic()Ljavacard/security/PublicKey;
-					checkcast 0 24;		// T_CLASSORINTERFACE javacard/security/RSAPublicKey
-					astore_2;
-					aload_2;
-					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					sconst_0;
-					invokeinterface 3 24 4;		// javacard/security/RSAPublicKey
-					sstore_3;
-					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
+				L2:	sconst_0;
 					sstore 4;
+					goto L4;
+				L3:	getfield_a_this 4;		// reference de/berlios/jmds/applet/SCAppletWithKey.userID
 					sload 4;
-					sload_3;
-					if_scmpge L2;
-				L1:	sspush 26368;
-					invokestatic 11;		// javacard/framework/ISOException.throwIt(S)V
-				L2:	aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setOutgoing()S
-					pop;
-					aload_1;
-					sload_3;
-					invokevirtual 15;		// javacard/framework/APDU.setOutgoingLength(S)V
-					aload_1;
-					getfield_a_this 5;		// reference de/berlios/jmds/applet/SCAppletWithKey.tmpBuff
-					sconst_0;
-					sload_3;
-					invokevirtual 16;		// javacard/framework/APDU.sendBytesLong([BSS)V
-					return;
+					aload_3;
+					sconst_5;
+					sload 4;
+					sadd;
+					baload;
+					bastore;
+					sinc 4 1;
+				L4:	sload 4;
+					sload_2;
+					if_scmplt L3;
+				L5:	return;
 		}
 
 	}

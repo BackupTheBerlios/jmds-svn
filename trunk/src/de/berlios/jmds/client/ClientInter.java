@@ -27,7 +27,6 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      * Comment for <code>serialVersionUID</code>
      */
     private final static long serialVersionUID = 3618417146430765111L;
-    private final static SCAppletClient SC_APPLET = SCAppletClient.getInstance();
 
     //----------------------------------------------------------//
 	//------------------- PUBLIC METHODS -----------------------//
@@ -43,7 +42,7 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
         byte[] tabId = Integer.toString(id).getBytes();
 
         try {
-            byte[] tabByteSC = SC_APPLET.code(tabId);
+            byte[] tabByteSC = SCAppletClient.code(tabId);
             
             ServiceContext sc = new ServiceContext ();
             sc.context_data = tabByteSC;
@@ -94,6 +93,5 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
     /**
      * @see org.omg.PortableInterceptor.InterceptorOperations#destroy()
      */
-    public void destroy() {
-    }
+    public void destroy() {}
 }

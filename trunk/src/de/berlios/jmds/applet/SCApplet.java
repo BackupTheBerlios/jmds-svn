@@ -23,9 +23,7 @@ public class SCApplet extends Applet {
     private final static byte CLA_SECURITY = (byte) 0x69;
     
     private final static byte INS_CODE = (byte) 0x10;
-    private final static byte INS_GET_CODE = (byte) 0x11;
     private final static byte INS_DECODE = (byte) 0x30;
-    private final static byte INS_GET_DECODE = (byte) 0x33;
     private final static byte INS_SET_USER_KEY = (byte) 0x77;
     
     private final static short BUFFER_LENGTH = (short) 0x20;

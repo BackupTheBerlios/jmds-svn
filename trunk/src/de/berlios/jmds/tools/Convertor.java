@@ -79,10 +79,10 @@ public class Convertor {
      * @param requestId
      * @return the table of int
      */
-    public final static int[] byteArrayToIntArray(byte[] requestId) {
-        int[] tmp = null;
-        for (int i = 0; i < requestId.length; i++) {
-            tmp[i] = new Byte(requestId[i]).intValue();
+    public final static int[] byteArrayToIntArray(byte[] byteArray) {
+        int[] tmp = new int[byteArray.length];
+        for (int i = 0; i < byteArray.length; i++) {
+            tmp[i] = byteArray[i];
         }
         return tmp;
     }

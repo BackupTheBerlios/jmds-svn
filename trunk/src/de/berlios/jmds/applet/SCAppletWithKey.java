@@ -10,9 +10,8 @@ import javacard.framework.Applet;
 import javacard.framework.ISOException;
 import javacard.framework.ISO7816;
 import javacard.security.KeyBuilder;
-import javacard.security.KeyPair;
-import javacard.security.RSAPrivateKey;
 import javacard.security.RSAPublicKey;
+import javacard.security.RandomData;
 import javacardx.crypto.Cipher;
 
 /**
@@ -25,34 +24,31 @@ import javacardx.crypto.Cipher;
 public class SCAppletWithKey extends Applet {
 
     private final static byte CLA_SECURITY = (byte) 0x69;
+    
     private final static byte INS_CODE = (byte) 0x10;
     private final static byte INS_DECODE = (byte) 0x20;
+    private final static byte INS_SET_USER = (byte) 0x30;
+    private final static byte INS_SET_SERVERKEY_MOD = (byte) 0x44;
+    private final static byte INS_SET_SERVERKEY_EXP = (byte) 0x66;
     
-    private final static byte INS_GETKEY_MOD_SIZE = (byte) 0x40;
-    private final static byte INS_GETKEY_MOD_DATA = (byte) 0x41;
-    private final static byte INS_GETKEY_EXP_SIZE = (byte) 0x42;
-    private final static byte INS_GETKEY_EXP_DATA = (byte) 0x43;
+    private final static short SESSIONS_KEY_LENGTH = (short) 5;
+    private final static short USER_ID_LENGTH = (short) 10;
 
-    private final static short BUFFER_LENGTH = (short) 255;
-
-    private byte[] tmpBuff;
-    
-    private KeyPair userKeyPair;
+    private RandomData random;
     private RSAPublicKey serverKey;
-    private RSAPrivateKey sessionKey = null;
+    private byte[] sessionKey;
+    private byte[] userID = null;
     private Cipher cipher;
     
     /**
      * Constructeur par défaut
      */
     protected SCAppletWithKey() {
-        tmpBuff = new byte[256];
+        sessionKey = new byte[SESSIONS_KEY_LENGTH];
         
-        userKeyPair = new KeyPair( KeyPair.ALG_RSA, KeyBuilder.LENGTH_RSA_512);
-        userKeyPair.genKeyPair();
         serverKey = (RSAPublicKey) KeyBuilder.buildKey(KeyBuilder.TYPE_RSA_PUBLIC, KeyBuilder.LENGTH_RSA_512, true);
-
         cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
+        random = RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);
         register();
     }
 
@@ -77,117 +73,105 @@ public class SCAppletWithKey extends Applet {
         if (inBuffer[ISO7816.OFFSET_CLA] == CLA_SECURITY) {
             switch (inBuffer[ISO7816.OFFSET_INS]) {
                 case INS_CODE: encode(apdu); break;
-                case INS_DECODE: break;
+                case INS_DECODE: decode(apdu); break;
                     
-                case INS_GETKEY_EXP_DATA : getPubKeyExponentSize(apdu); break;
-                case INS_GETKEY_EXP_SIZE : getPubKeyExponent(apdu); break;
-                case INS_GETKEY_MOD_DATA : getPubKeyModulusSize(apdu); break;
-                case INS_GETKEY_MOD_SIZE : getPubKeyModulus(apdu); break;
+                case INS_SET_USER : setUserID(apdu); break;
+                case INS_SET_SERVERKEY_EXP : setSeverKeyExp(apdu); break;
+                case INS_SET_SERVERKEY_MOD : setServerKeyMod(apdu); break;
             }
         }
     }
     
     private void encode(APDU apdu)
     {
+        if(userID == null)
+            ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+        if(!serverKey.isInitialized())
+            ISOException.throwIt(ISO7816.SW_CONDITIONS_NOT_SATISFIED);
+        
         short byteRead = apdu.setIncomingAndReceive();
         byte[] inBuffer = apdu.getBuffer();
+        byte[] code = new byte[(short)(byteRead + SESSIONS_KEY_LENGTH + USER_ID_LENGTH)];
         
-        cipher.init(userKeyPair.getPrivate(), Cipher.MODE_ENCRYPT);
-        short outbytes = cipher.doFinal(inBuffer,(short)ISO7816.OFFSET_CDATA, byteRead, inBuffer, (short)ISO7816.OFFSET_CDATA);    
+        random.generateData(sessionKey, (short)0, SESSIONS_KEY_LENGTH);
+        
+        for (short i = 0; i < SESSIONS_KEY_LENGTH; i++) {
+            code[i] = sessionKey[i];
+        }
+
+        for (short i = 0; i < USER_ID_LENGTH; i++) {
+            code[(short)(i + SESSIONS_KEY_LENGTH)] = userID[i];
+        }
+
+        for (short i = 0; i < byteRead; i++) {
+            code[(short)(i + SESSIONS_KEY_LENGTH + USER_ID_LENGTH)] = inBuffer[(short) (i + ISO7816.OFFSET_CDATA)];
+        }
+        
+        cipher.init(serverKey, Cipher.MODE_ENCRYPT);
+        short byteWrite = cipher.doFinal(code, (short)0, (short) (byteRead + SESSIONS_KEY_LENGTH + USER_ID_LENGTH), code, (short)0);
         
         // Send results
         short Le = apdu.setOutgoing();
-        if (Le < outbytes)
+        if (Le < byteWrite)
             ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
 
         // indicate the number of bytes in the data field
-        apdu.setOutgoingLength(outbytes); 
+        apdu.setOutgoingLength(byteWrite); 
         // at offset 0 send 128 byte of data in the buffer
-        apdu.sendBytesLong(inBuffer, (short)ISO7816.OFFSET_CDATA, (short)outbytes);
-        
-//        messLength = apdu.setIncomingAndReceive();
-//        RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
-//        short modSize = pubKey.getModulus(tmpBuff, (short) 0);
-//        short expSize = pubKey.getExponent(tmpBuff, (short) 0);
-//        byte[] code = new byte[messLength + modSize + expSize];
-//        for (short i = 0; i < messLength; i++) {
-//            code[i] = buffer[(short) (i + ISO7816.OFFSET_CDATA)];
-//        }
-//        modSize = pubKey.getModulus(tmpBuff, (short) 0);
-//        for (short i = 0; i < modSize; i++) {
-//            code[i + messLength] = tmpBuff[i];
-//        }
-//        expSize = pubKey.getExponent(tmpBuff, (short) 0);
-//        for (short i = 0; i < expSize; i++) {
-//            code[i + messLength + modSize] = tmpBuff[i];
-//        }
-//        cipher.init(userKeyPair.getPrivate(), Cipher.MODE_ENCRYPT);
-//        cipher.doFinal(code, (short)0, (short) (messLength + modSize + expSize), code, (short)0);
+        apdu.sendBytesLong(code, (short)0, (short)byteWrite);
     }
     
-    ////////////////////////////////////////////////////////////////////////////////
-    //                    Public-Key-Transfer                                     //
-    ////////////////////////////////////////////////////////////////////////////////
-    private void getPubKeyModulusSize( APDU apdu ) {
-        apdu.setIncomingAndReceive();
-        byte[] inBuffer = apdu.getBuffer();
-        // Send results
-        short Le = apdu.setOutgoing();
-        if (Le < (short) 2)
-            ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
-        
-        RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
-        short keySize = pubKey.getModulus( tmpBuff,(short) 0);
-        inBuffer[ (byte)0 ] = (byte) (keySize / 256 );
-        inBuffer[ (byte)1 ] = (byte) (keySize % 256 );
-        apdu.setOutgoing();
-        apdu.setOutgoingLength( (byte) 2 );
-        apdu.sendBytesLong( inBuffer, (short) 0, (short) 2 );
-    }
-    
-    private void getPubKeyModulus( APDU apdu ) {
-        RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
-        short keySize = pubKey.getModulus( tmpBuff,(short) 0);
-        
-        // Send results
-        short Le = apdu.setOutgoing();
-        if (Le < keySize)
-            ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
-
-        apdu.setOutgoing();
-        apdu.setOutgoingLength( keySize );
-        apdu.sendBytesLong( tmpBuff, (short) 0, keySize );
-    }
-    
-    private void getPubKeyExponentSize( APDU apdu ) {
-        apdu.setIncomingAndReceive();
+    private void decode(APDU apdu)
+    {
+        short byteRead = apdu.setIncomingAndReceive();
         byte[] inBuffer = apdu.getBuffer();
 
-        // Send results
-        short Le = apdu.setOutgoing();
-        if (Le < (short) 2)
-            ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
-
-        RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
-        short keySize = pubKey.getExponent(tmpBuff,(short) 0);
-        inBuffer[ (byte)0 ] = (byte) (keySize / 256 );
-        inBuffer[ (byte)1 ] = (byte) (keySize % 256 );
-        apdu.setOutgoing();
-        apdu.setOutgoingLength( (byte) 2 );
-        apdu.sendBytesLong( inBuffer, (short) 0, (short) 2 );
+        short cleInd = 0;
+        byte []resByte = new byte[byteRead];
+        for(short i = 0 ; i < byteRead ; i++ ) {
+            resByte[i] = (byte)(inBuffer[(short)(i + ISO7816.OFFSET_CDATA)] ^ sessionKey[cleInd]);
+            cleInd = (short)(((short)(cleInd + 1)) % SESSIONS_KEY_LENGTH);
+        }
     }
-    
-    private void getPubKeyExponent( APDU apdu ) {
-        RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
-        short keySize = pubKey.getExponent( tmpBuff,(short) 0);
-        
-        // Send results
-        short Le = apdu.setOutgoing();
-        if (Le < keySize)
-            ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
 
-        apdu.setOutgoing();
-        apdu.setOutgoingLength( keySize );
-        apdu.sendBytesLong( tmpBuff, (short) 0, keySize );
+    /** 
+     * DOCME
+     *
+     * @param apdu 
+     */
+    private void setServerKeyMod(APDU apdu) {
+        short byteRead = apdu.setIncomingAndReceive();
+        byte[] inBuffer = apdu.getBuffer();
+        
+        serverKey.setModulus(inBuffer, ISO7816.OFFSET_CDATA, byteRead);
+    }
+
+    /** 
+     * DOCME
+     * 
+     * @param apdu 
+     */
+    private void setSeverKeyExp(APDU apdu) {
+        short byteRead = apdu.setIncomingAndReceive();
+        byte[] inBuffer = apdu.getBuffer();
+        
+        serverKey.setExponent(inBuffer, ISO7816.OFFSET_CDATA, byteRead);
+    }
+
+    /** 
+     * DOCME
+     *
+     * @param apdu 
+     */
+    private void setUserID(APDU apdu) {
+        short byteRead = apdu.setIncomingAndReceive();
+        byte[] inBuffer = apdu.getBuffer();
+        
+        if(byteRead != USER_ID_LENGTH)
+            ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
+        
+        for (short i = 0; i < byteRead; i++) {
+            userID[i] = inBuffer[(short)(ISO7816.OFFSET_CDATA + i)];
+        }
     }
 }
