@@ -20,10 +20,10 @@ import de.berlios.jmds.tools.SecurityConfiguration;
 public class RightsManager {
 	
 	/** The security configuration **/
-	private SecurityConfiguration securityConfig = SecurityConfiguration.getInstance();
+	private SecurityConfiguration securityConfig 	= SecurityConfiguration.getInstance();
 	
 	/** The rights configuration **/
-	private RightsConfiguration rightsConfig=RightsConfiguration.getInstance();
+	private RightsConfiguration rightsConfig		= RightsConfiguration.getInstance();
 	
 	
 	
@@ -40,10 +40,7 @@ public class RightsManager {
 	 * Constructor
 	 *  
 	 */
-	private RightsManager ()
-	{
-			
-	}
+	private RightsManager (){}
 	
 	//----------------------------------------------------------//
 	//------------------- PUBLIC METHODS -----------------------//
@@ -71,7 +68,8 @@ public class RightsManager {
 	 */
 	public boolean canUse (String szUserId, String szIOR, String szFonction)
 	{
-		// TODO
-		return false;		
+		String szGroupClient = securityConfig.getclientGroup(szUserId);
+		
+		return rightsConfig.checkFonctionGroupAccess(szGroupClient, szIOR, szFonction);		
 	}
 }
