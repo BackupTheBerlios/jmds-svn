@@ -1,5 +1,5 @@
 // converted by version 1.3
-// on Sat Feb 19 19:22:00 CET 2005
+// on Sat Feb 19 19:55:27 CET 2005
 
 .package de/berlios/jmds/applet {
 	.aid 0x11:0x22:0x33:0x44:0x55:0x66;
@@ -17,13 +17,13 @@
 		// 0
 		instanceFieldRef byte[] JmdsSecurityApplet/buffer;
 		// 1
-		instanceFieldRef byte JmdsSecurityApplet/messLength;
+		instanceFieldRef byte[] JmdsSecurityApplet/code;
 		// 2
-		instanceFieldRef byte[] Ping/buffer;
+		instanceFieldRef short JmdsSecurityApplet/messLength;
 		// 3
-		instanceFieldRef byte Ping/messLength;
+		instanceFieldRef byte[] Ping/buffer;
 		// 4
-		virtualMethodRef 0.3.1()V;		// javacard/framework/Applet.register()V
+		instanceFieldRef byte Ping/messLength;
 		// 5
 		classRef JmdsSecurityApplet;
 		// 6
@@ -31,33 +31,44 @@
 		// 7
 		virtualMethodRef 0.10.1()[B;		// javacard/framework/APDU.getBuffer()[B
 		// 8
-		virtualMethodRef 0.10.9(S)V;		// javacard/framework/APDU.setOutgoingLength(S)V
+		staticMethodRef JmdsSecurityApplet/encode(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 9
-		virtualMethodRef 0.10.5([BSS)V;		// javacard/framework/APDU.sendBytesLong([BSS)V
+		staticMethodRef JmdsSecurityApplet/getEncode(Ljavacard/framework/APDU;)V;
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
 		// 10
-		staticFieldRef byte[] JmdsSecurityApplet/SC;
-		// 11
-		staticMethodRef 0.3.0()V;		// javacard/framework/Applet.<init>()V
-		// 12
-		classRef Ping;
-		// 13
-		staticMethodRef Ping/<init>()V;
-		// 14
 		virtualMethodRef 0.10.6()S;		// javacard/framework/APDU.setIncomingAndReceive()S
-		// 15
+		// 11
 		virtualMethodRef 0.10.7()S;		// javacard/framework/APDU.setOutgoing()S
-		// 16
+		// 12
 		staticMethodRef 0.7.1(S)V;		// javacard/framework/ISOException.throwIt(S)V
+		// 13
+		virtualMethodRef 0.10.5([BSS)V;		// javacard/framework/APDU.sendBytesLong([BSS)V
+		// 14
+		staticMethodRef 0.3.0()V;		// javacard/framework/Applet.<init>()V
+		// 15
+		virtualMethodRef 0.3.1()V;		// javacard/framework/Applet.register()V
+		// 16
+		classRef Ping;
+		// 17
+		staticMethodRef Ping/<init>()V;
+		// 18
+		virtualMethodRef 0.10.9(S)V;		// javacard/framework/APDU.setOutgoingLength(S)V
 	}
 
 	.class public JmdsSecurityApplet 0 extends 0.3 {		// extends javacard/framework/Applet
 
 		.fields {
 			private byte[] buffer 0;		// [B
-			private byte messLength 1;		// B
-			private static byte[] SC;		// [B
+			private byte[] code 1;		// [B
+			private short messLength 2;		// S
 			private static final byte CLA_SECURITY = 105;		// B
-			private static final byte ENCODEUR = 16;		// B
+			private static final byte CODE = 16;		// B
+			private static final byte GET_CODE = 32;		// B
+			private static final byte DECODE = 48;		// B
+			private static final byte GET_DECODE = 64;		// B
 			private static final short BUFFER_LENGTH = 255;		// S
 		}
 
@@ -76,44 +87,24 @@
 		}
 
 		.method protected <init>()V 0 {
-			.stack 3;
+			.stack 2;
 			.locals 0;
 
 				L0:	aload_0;
-					invokespecial 11;		// javacard/framework/Applet.<init>()V
+					invokespecial 14;		// javacard/framework/Applet.<init>()V
 					aload_0;
 					sspush 255;
 					newarray 11;
 					putfield_a 0;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.buffer
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					sconst_0;
-					bspush 100;
-					bastore;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					sconst_1;
-					bspush 101;
-					bastore;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					sconst_2;
-					bspush 110;
-					bastore;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					sconst_3;
-					bspush 105;
-					bastore;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					sconst_4;
-					bspush 115;
-					bastore;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					sconst_5;
-					bspush 101;
-					bastore;
+					aload_0;
+					sspush 255;
+					newarray 11;
+					putfield_a 1;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.code
 					aload_0;
 					sconst_0;
-					putfield_b 1;		// byte de/berlios/jmds/applet/JmdsSecurityApplet.messLength
+					putfield_s 2;		// short de/berlios/jmds/applet/JmdsSecurityApplet.messLength
 					aload_0;
-					invokevirtual 4;		// javacard/framework/Applet.register()V
+					invokevirtual 15;		// javacard/framework/Applet.register()V
 					return;
 		}
 
@@ -127,7 +118,7 @@
 		}
 
 		.method public process(Ljavacard/framework/APDU;)V 7 {
-			.stack 4;
+			.stack 2;
 			.locals 1;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
@@ -139,22 +130,71 @@
 					sconst_0;
 					baload;
 					bspush 105;
-					if_scmpne L3;
+					if_scmpne L5;
 				L1:	aload_2;
 					sconst_1;
 					baload;
-					stableswitch L3 16 16 L2;
-				L2:	aload_1;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					arraylength;
-					invokevirtual 8;		// javacard/framework/APDU.setOutgoingLength(S)V
+					slookupswitch L5 4 16 L2 32 L3 48 L4 64 L5;
+				L2:	aload_0;
 					aload_1;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
+					invokespecial 8;		// de/berlios/jmds/applet/JmdsSecurityApplet.encode(Ljavacard/framework/APDU;)V
+					goto L5;
+				L3:	aload_0;
+					aload_1;
+					invokespecial 9;		// de/berlios/jmds/applet/JmdsSecurityApplet.getEncode(Ljavacard/framework/APDU;)V
+					goto L5;
+				L4:	goto L5;
+				L5:	return;
+		}
+
+		.method private encode(Ljavacard/framework/APDU;)V {
+			.stack 5;
+			.locals 1;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	aload_0;
+					aload_1;
+					invokevirtual 10;		// javacard/framework/APDU.setIncomingAndReceive()S
+					putfield_s 2;		// short de/berlios/jmds/applet/JmdsSecurityApplet.messLength
 					sconst_0;
-					getstatic_a 10;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.SC
-					arraylength;
-					invokevirtual 9;		// javacard/framework/APDU.sendBytesLong([BSS)V
+					sstore_2;
+					goto L2;
+				L1:	getfield_a_this 1;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.code
+					sload_2;
+					getfield_a_this 0;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.buffer
+					sload_2;
+					sconst_5;
+					sadd;
+					baload;
+					bspush 16;
+					sand;
+					bastore;
+					sinc 2 1;
+				L2:	sload_2;
+					getfield_s_this 2;		// short de/berlios/jmds/applet/JmdsSecurityApplet.messLength
+					if_scmplt L1;
 				L3:	return;
+		}
+
+		.method private getEncode(Ljavacard/framework/APDU;)V {
+			.stack 4;
+			.locals 0;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+
+				L0:	aload_1;
+					invokevirtual 11;		// javacard/framework/APDU.setOutgoing()S
+					getfield_s_this 2;		// short de/berlios/jmds/applet/JmdsSecurityApplet.messLength
+					if_scmpge L2;
+				L1:	sspush 26368;
+					invokestatic 12;		// javacard/framework/ISOException.throwIt(S)V
+				L2:	aload_1;
+					getfield_a_this 1;		// reference de/berlios/jmds/applet/JmdsSecurityApplet.code
+					sconst_0;
+					getfield_s_this 2;		// short de/berlios/jmds/applet/JmdsSecurityApplet.messLength
+					invokevirtual 13;		// javacard/framework/APDU.sendBytesLong([BSS)V
+					return;
 		}
 
 	}
@@ -189,16 +229,16 @@
 			.locals 0;
 
 				L0:	aload_0;
-					invokespecial 11;		// javacard/framework/Applet.<init>()V
+					invokespecial 14;		// javacard/framework/Applet.<init>()V
 					aload_0;
 					sspush 255;
 					newarray 11;
-					putfield_a 2;		// reference de/berlios/jmds/applet/Ping.buffer
+					putfield_a 3;		// reference de/berlios/jmds/applet/Ping.buffer
 					aload_0;
 					sconst_0;
-					putfield_b 3;		// byte de/berlios/jmds/applet/Ping.messLength
+					putfield_b 4;		// byte de/berlios/jmds/applet/Ping.messLength
 					aload_0;
-					invokevirtual 4;		// javacard/framework/Applet.register()V
+					invokevirtual 15;		// javacard/framework/Applet.register()V
 					return;
 		}
 
@@ -206,8 +246,8 @@
 			.stack 1;
 			.locals 0;
 
-				L0:	new 12;		// de/berlios/jmds/applet/Ping
-					invokespecial 13;		// de/berlios/jmds/applet/Ping.<init>()V
+				L0:	new 16;		// de/berlios/jmds/applet/Ping
+					invokespecial 17;		// de/berlios/jmds/applet/Ping.<init>()V
 					return;
 		}
 
@@ -231,13 +271,13 @@
 					slookupswitch L9 2 16 L2 48 L6;
 				L2:	aload_0;
 					aload_1;
-					invokevirtual 14;		// javacard/framework/APDU.setIncomingAndReceive()S
+					invokevirtual 10;		// javacard/framework/APDU.setIncomingAndReceive()S
 					s2b;
-					putfield_b 3;		// byte de/berlios/jmds/applet/Ping.messLength
+					putfield_b 4;		// byte de/berlios/jmds/applet/Ping.messLength
 					sconst_0;
 					sstore_3;
 					goto L4;
-				L3:	getfield_a_this 2;		// reference de/berlios/jmds/applet/Ping.buffer
+				L3:	getfield_a_this 3;		// reference de/berlios/jmds/applet/Ping.buffer
 					sload_3;
 					aload_2;
 					sconst_5;
@@ -251,25 +291,25 @@
 					s2b;
 					sstore_3;
 				L4:	sload_3;
-					getfield_b_this 3;		// byte de/berlios/jmds/applet/Ping.messLength
+					getfield_b_this 4;		// byte de/berlios/jmds/applet/Ping.messLength
 					if_scmplt L3;
 				L5:	goto L9;
 				L6:	aload_1;
-					invokevirtual 15;		// javacard/framework/APDU.setOutgoing()S
+					invokevirtual 11;		// javacard/framework/APDU.setOutgoing()S
 					sstore_3;
 					sload_3;
-					getfield_b_this 3;		// byte de/berlios/jmds/applet/Ping.messLength
+					getfield_b_this 4;		// byte de/berlios/jmds/applet/Ping.messLength
 					if_scmpge L8;
 				L7:	sspush 26368;
-					invokestatic 16;		// javacard/framework/ISOException.throwIt(S)V
+					invokestatic 12;		// javacard/framework/ISOException.throwIt(S)V
 				L8:	aload_1;
-					getfield_b_this 3;		// byte de/berlios/jmds/applet/Ping.messLength
-					invokevirtual 8;		// javacard/framework/APDU.setOutgoingLength(S)V
+					getfield_b_this 4;		// byte de/berlios/jmds/applet/Ping.messLength
+					invokevirtual 18;		// javacard/framework/APDU.setOutgoingLength(S)V
 					aload_1;
-					getfield_a_this 2;		// reference de/berlios/jmds/applet/Ping.buffer
+					getfield_a_this 3;		// reference de/berlios/jmds/applet/Ping.buffer
 					sconst_0;
-					getfield_b_this 3;		// byte de/berlios/jmds/applet/Ping.messLength
-					invokevirtual 9;		// javacard/framework/APDU.sendBytesLong([BSS)V
+					getfield_b_this 4;		// byte de/berlios/jmds/applet/Ping.messLength
+					invokevirtual 13;		// javacard/framework/APDU.sendBytesLong([BSS)V
 				L9:	return;
 		}
 

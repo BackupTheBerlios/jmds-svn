@@ -82,8 +82,8 @@ public class JmdsSecurityApplet extends Applet {
     private void encode(APDU apdu)
     {
         messLength = apdu.setIncomingAndReceive();
-        for (int i = 0; i < messLength; i++) {
-            code[i] = (byte)(buffer[i + ISO7816.OFFSET_CDATA] & 0x10);
+        for (short i = 0; i < messLength; i++) {
+            code[i] = (byte)(buffer[(short)(i + ISO7816.OFFSET_CDATA)] & 0x10);
         }
     }
     
