@@ -11,13 +11,17 @@
 package de.berlios.jmds.tools;
 
 /**
- * Fournit des outils de conversions
+ * Give some conversion tools
  * 
  * @author Jérôme GUERS
  * 
  */
 public class Convertor {
     
+    /**
+     * @param byteArray
+     * @return the string
+     */
     private final static String ByteToHexString(byte[] byteArray) {
         String strArray = new String();
         strArray = "";
@@ -31,6 +35,10 @@ public class Convertor {
         return strArray;
     }
 
+    /**
+     * @param i
+     * @return the array of byte
+     */
     private final static byte[] ShortToBytePair(short i)
     {
         byte[] retVal = new byte[2];
@@ -43,8 +51,8 @@ public class Convertor {
     // ------------------- PUBLIC METHODS -----------------------//
     // ----------------------------------------------------------//
     /**
-     * @param requestId
-     * @return the table of int
+     * @param byteArray
+     * @return the array of int
      */
     public final static int[] ByteArrayToIntArray(byte[] byteArray) {
         int[] tmp = new int[byteArray.length];
@@ -55,10 +63,8 @@ public class Convertor {
     }
 
     /** 
-     * DOCME 
-     * 
-     * @param code
-     * @return 
+     * @param byteArray
+     * @return the string
      */
     public final static String ByteArrayToSpacedHexString(byte[] byteArray) {
         String strArray = "";
@@ -73,10 +79,8 @@ public class Convertor {
         return strArray;    }
     
     /**
-     * DOCME
-     * 
      * @param value
-     * @return a table of int containing the stirng
+     * @return a table of int containing the string
      */
     public final static int[] HexStringToIntArray(String value) {
         int intKey[] = new int[(value.length() / 2)];
@@ -100,11 +104,9 @@ public class Convertor {
     }
 
     /**
-     * Parse la chaine en couple de deux chiffre et les converti en tableau de
-     * short
      * 
      * @param strHex
-     * @return
+     * @return the array of short
      */
     public final static short[] HexStringToShortArray(String strHex) {
         short shortKey[] = new short[(strHex.length() / 2)];
@@ -141,10 +143,8 @@ public class Convertor {
     }
 
     /** 
-     * DOCME
-     *
-     * @param shortListAID
-     * @return 
+     * @param shortArray
+     * @return the string
      */
     public final static String ShortArrayToSpacedHexString(short[] shortArray) {
         String strArray = "";

@@ -15,7 +15,12 @@ import org.omg.PortableServer.POAPackage.AdapterNonExistent;
 import org.omg.PortableServer.POAPackage.ObjectNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 
+import de.berlios.jmds.tools.MyParseServiceContext;
+
 /**
+ * Allow to intercept message send or receive by server. 
+ * So before send message on orb this objet code the service context.
+ * And before receive message by server this objet decode the service context and check access to object by client.
  * @author Sébastien GUINCHARD
  */
 public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor
@@ -29,10 +34,14 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 
 	POA rootPOA;
 	
+	
 	// ----------------------------------------------------------//
 	// ------------------- PUBLIC METHODS -----------------------//
 	// ----------------------------------------------------------//
-
+	
+	/**
+	 * @param rootPOA the rootPOA use by the server
+	 */
 	public ServerInter(POA rootPOA) {
 		this.rootPOA = rootPOA;
 	}
@@ -42,18 +51,6 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive_request_SC request: " + ri.request_id());
-		
-		ServiceContext sc = ri.get_request_service_context(0);
-		byte[] scDecode = SCManager.getInstance().decode (sc.context_data);
-        
-        //System.out.println("Target= "+ ri.orb_id());
-		System.out.println (scDecode);
-        
-        /*if (!RightsManager.getInstance ().canUse (userID + "" , ri.orb_id() , ri.operation ()))
-        {
-            throw new SecurityException("User can not access to this object"); 
-        }*/
 	}
 
 	/**
@@ -64,12 +61,26 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 		System.out.println ("ServerInter.receive request: " + ri.request_id());		
 		org.omg.CORBA.Object ior = null;
 		try {
+			ServiceContext sc = ri.get_request_service_context(0);
+			byte[] scDecode = SCManager.getInstance().decode (sc.context_data);
+			
+			// Vérifie si le decodage c bien passe 
+			if (!MyParseServiceContext.findRequestID(scDecode).equals(Integer.toString(ri.request_id()).getBytes()))
+			{
+            		throw new SecurityException("User don't use validated key"); 
+        	}			
+
+			// Recuperation de la reference de l'objet
 			String[] szAdapters = ri.adapter_name();
 			String szAdapterName = szAdapters[szAdapters.length - 1];
 			POA poa =  rootPOA.find_POA(szAdapterName, false);
 			ior = poa.id_to_reference(ri.object_id());
-			System.out.println("IOR??? : " + ior);
-			System.out.println("Methode??? : " + ri.operation());
+			
+			// Valide l'acces du user à la méthode de l'objet
+			if (!RightsManager.getInstance ().canUse (MyParseServiceContext.findClientID(scDecode).toString()  , ior.toString(), ri.operation ()))
+        		{
+            		throw new SecurityException("User can not access to this object"); 
+        		}
 		} catch (AdapterNonExistent e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,7 +115,6 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_exception (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.send_exception: " + ri.operation());
 	}
 
 	/**
@@ -112,8 +122,6 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_other (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.send_other: " + ri.operation());
-
 	}
 
 	/**
@@ -127,8 +135,6 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	/**
 	 * @see org.omg.PortableInterceptor.InterceptorOperations#destroy()
 	 */
-	public void destroy ()
-	{
-        System.out.println("Server Security Interceptor killed !!");   
-    }
+	public void destroy() {		
+	}
 }

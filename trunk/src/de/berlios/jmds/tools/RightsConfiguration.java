@@ -16,6 +16,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
 /**
+ * This singleton allow to load rigth configuration contain in a XML file
  * @author Denis
  *
  */
@@ -67,6 +68,33 @@ public class RightsConfiguration {
 			INSTANCE = new RightsConfiguration ();
 		
 		return INSTANCE;
+	}
+	
+	/**
+	 * @param szGroup		the group of client
+	 * @param szIOR			the object reference
+	 * @return 				the permission of access (true or false)
+	 */
+	public boolean checkObjectGroupAccess(String szGroup, String szIOR)
+	{
+		System.out.println("Recherche des groups ayant acces");
+		int iIOR = -1;
+		int iFonction = -1;
+		
+		// Recherche de l'objet dans le fichier de conf
+		System.out.println("Recherche de l'objet");
+		iIOR = getIORIndex(szIOR);
+		
+		// Si l'objet a ete trouve alors recherche de la fonction
+		if (iIOR != -1){
+			System.out.println("Recherche du group");
+			int iGroup = getGroupIndex(iIOR, szGroup);
+			if (iGroup !=-1)
+				return true;			
+		}
+		
+		// Si la l objet ou la fonction de l'objet n ont pas ete trouves
+		return false;
 	}
 	
 	/**
@@ -151,7 +179,7 @@ public class RightsConfiguration {
 		try
 		{
 			// TODO enregistrement dans le meme fichier rights.xml apres les tests
-			rightsConfig.save("src/saveRights.xml");
+			rightsConfig.save("src/Rights.xml");
 		}
 		catch (ConfigurationException e)
 		{
@@ -172,7 +200,6 @@ public class RightsConfiguration {
 		Iterator iter = rightsConfig.getList("ior[@id]").iterator();
 		while(iter.hasNext()){
 			String iorId = (String) iter.next();
-			System.out.println(iorId);
 			if (iorId.compareTo(szIOR)==0)
 				return i;
 			i++;
@@ -191,7 +218,6 @@ public class RightsConfiguration {
 		i = 0;
 		while(iter.hasNext()){
 			String fonctionId = (String) iter.next();
-			System.out.println(fonctionId);
 			if (fonctionId.compareTo(szFonction)==0)
 				return i;
 			i++;
@@ -208,6 +234,24 @@ public class RightsConfiguration {
 	private int getGroupIndex(int iIOR, int iFonction, String szGroup) {
 		int i = 0;
 		Iterator iter = rightsConfig.getList("ior("+ iIOR+ ").fonction("+ iFonction+ ").group[@id]").iterator();
+		while(iter.hasNext()){
+			String groupId = (String) iter.next();
+			System.out.println(groupId);
+			if (groupId.compareTo(szGroup)==0)
+				return i;
+			i++;
+		}
+		return -1;
+	}
+	
+	/**
+	 * @param iIOR			the object index
+	 * @param szGroup		the group which have access to the fonction
+	 * @return				the group index in hierachie 
+	 */
+	private int getGroupIndex(int iIOR, String szGroup) {
+		int i = 0;
+		Iterator iter = rightsConfig.getList("ior("+ iIOR+ ").group[@id]").iterator();
 		while(iter.hasNext()){
 			String groupId = (String) iter.next();
 			System.out.println(groupId);

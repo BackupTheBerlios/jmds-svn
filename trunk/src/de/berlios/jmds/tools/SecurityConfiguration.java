@@ -15,6 +15,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
 /**
+ * This singleton allow to load security configuration contain in a XML file
  * @author Denis
  *
  */

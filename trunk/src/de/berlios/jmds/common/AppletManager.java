@@ -13,7 +13,7 @@ import slb.iop.SmartCard;
 import slb.iop.slbException;
 
 /**
- * DOCME
+ * The manager of card applet witch alllow the communication between the system and card
  * 
  * @author Jérôme GUERS
  */
@@ -107,7 +107,6 @@ public class AppletManager {
     }
     
     /**
-     * @param card
      * @param LE
      * @param body
      * @param P2
@@ -116,6 +115,7 @@ public class AppletManager {
      * @param CLA
      * @return out the result of the sendCardAPDU call
      * @throws slbException
+     * @throws SecurityException
      * 
      */
     public final static short[] sendCardAPDU(int CLA, int INS, int P1, int P2, int[] body, int LE) throws slbException,

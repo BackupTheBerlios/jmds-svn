@@ -24,8 +24,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
 import slb.iop.slbException;
+import de.berlios.jmds.applet.UserManagerAppletWithKeyClient;
 import de.berlios.jmds.client.SCAppletClient;
-import de.berlios.jmds.server.UserManagerAppletWithKeyClient;
 import de.berlios.jmds.tools.Convertor;
 
 /**

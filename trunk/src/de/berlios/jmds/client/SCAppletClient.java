@@ -15,6 +15,7 @@ import de.berlios.jmds.tools.Convertor;
 import slb.iop.slbException;
 
 /**
+ * This object call card applet to code or decode the service context of intercepting message
  * @author Denis
  * 
  */
@@ -36,15 +37,13 @@ public class SCAppletClient {
      */
     public final static byte[] code(byte[] requestId) throws SecurityException, slbException {
         int[] intRequestId = Convertor.ByteArrayToIntArray(requestId);
-       // short[] tmpCode = AppletManager.sendCardAPDU(CLA_SECURITY, INS_CODE, 0, 0, intRequestId, 0x40);
-        //byte[] code = Convertor.ShortArrayToByteArray(tmpCode);
-        //return code;
-        return requestId;
+        short[] tmpCode = AppletManager.sendCardAPDU(CLA_SECURITY, INS_CODE, 0, 0, intRequestId, 0x40);
+        byte[] code = Convertor.ShortArrayToByteArray(tmpCode);
+        return code;
     }
 
     /**
-     * @param SC
-     *            as the message service context
+     * @param sc as the message service context
      * @return the request id of the message
      * @throws slbException 
      * @throws SecurityException 

@@ -13,6 +13,8 @@ package de.berlios.jmds.server;
 import de.berlios.jmds.tools.SecurityConfiguration;
 
 /**
+ * Manage the service context to check if code and decode are true and if the client can talk with server
+ * 
  * @author Denis
  * 
  */
@@ -23,6 +25,7 @@ public class SCManager {
     /** The singleton instance * */
     private static SCManager INSTANCE = null;
     
+    /** The key of server * */
     private byte[] serverKey;
 
     // ----------------------------------------------------------//
@@ -52,17 +55,22 @@ public class SCManager {
         return INSTANCE;
     }
     
+    /**
+     * @param key the key of server
+     */
     public void setServerKey(byte[] key) {
         this.serverKey = key;
     }
 
+    /**
+     * Initialize de default server key
+     */
     public void setDefaultServerKey() {
         setServerKey(securityConfig.getServerKey().getBytes());
     }
 
     /**
-     * @param RequestId
-     *            as id of the request message
+     * @param sc as the message service context
      * @return The array byte which contains the encoding servec context
      */
     public byte[] code(byte[] sc) {
@@ -76,8 +84,7 @@ public class SCManager {
     }
 
     /**
-     * @param SC
-     *            as the message service context
+     * @param sc as the message service context
      * @return the request id of the message
      */
     public byte[] decode(byte[] sc) {
@@ -91,13 +98,13 @@ public class SCManager {
     }
 
     /**
-     * DOCME
      * 
      * @param inBuffer
      * @param inOffset
      * @param inLength
      * @param outBuffer
      * @param outOffset
+     * @param key
      */
     private void crypt(byte[] inBuffer, int inOffset, int inLength,byte[] outBuffer, int outOffset, byte[] key) {
         int cleInd = 0;

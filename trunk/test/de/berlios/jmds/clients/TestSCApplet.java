@@ -10,9 +10,9 @@
 package de.berlios.jmds.clients;
 
 import slb.iop.slbException;
+import de.berlios.jmds.applet.UserManagerAppletClient;
 import de.berlios.jmds.client.SCAppletClient;
 import de.berlios.jmds.server.SCManager;
-import de.berlios.jmds.server.UserManagerAppletClient;
 
 /**
  * DOCME

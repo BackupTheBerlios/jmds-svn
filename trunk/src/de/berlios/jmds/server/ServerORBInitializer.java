@@ -11,13 +11,14 @@
 package de.berlios.jmds.server;
 
 import org.omg.CORBA.LocalObject;
-import org.omg.PortableInterceptor.*;
+import org.omg.PortableInterceptor.ORBInitInfo;
+import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.InvalidName;
-import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
 /**
+ * Initializer witch allow to attach a interceptor on server
  * @author Sébastien GUINCHARD
  * 
  */

@@ -12,7 +12,8 @@ import javacard.framework.ISO7816;
 //import javacard.security.RandomData;
 
 /**
- * DOCME
+ * this applet object allow coding and decoding of service context with specifique key and client_ID.
+ * Before to begin encoding it's necessaire to initialise the key et the client_ID
  * 
  * @version 0.1
  * 
@@ -40,7 +41,7 @@ public class SCApplet extends Applet {
 
     
     /**
-     * Constructeur par défaut
+     * Default constructeur 
      */
     protected SCApplet() {
         userID = new byte[USER_ID_LENGTH];
@@ -58,8 +59,6 @@ public class SCApplet extends Applet {
     }
 
     /**
-     * Méthode appelée à l'arrivée d'une trame APDU
-     * 
      * @param apdu
      * @throws ISOException
      * 
@@ -81,6 +80,9 @@ public class SCApplet extends Applet {
             ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
     }
     
+    /**
+     * @param apdu the message should be encoding
+     */
     private void encode(APDU apdu)
     {
         if(userIDInit == false)
@@ -117,9 +119,8 @@ public class SCApplet extends Applet {
     }
     
     /** 
-     * DOCME
      *
-     * @param apdu 
+     * @param apdu the message should be decoding
      */
     private void decode(APDU apdu) {
         if(serverKeyInit == false)
@@ -144,9 +145,8 @@ public class SCApplet extends Applet {
     }
     
     /** 
-     * DOCME
-     *
-     * @param apdu 
+     * Allow to initialise the key
+     * @param apdu witch contain the server key
      */
     private void setServerKey(APDU apdu) {
         short byteRead = apdu.setIncomingAndReceive();
@@ -161,9 +161,8 @@ public class SCApplet extends Applet {
         serverKeyInit = true;    }
 
     /** 
-     * DOCME
-     *
-     * @param apdu 
+     * Allow to initialise the user id     *
+     * @param apdu witch contain the user id
      */
     private void setUserID(APDU apdu) {
         short byteRead = apdu.setIncomingAndReceive();
@@ -179,7 +178,7 @@ public class SCApplet extends Applet {
     }
     
     /** 
-     * DOCME
+     * Crypte the inBuffer into outBuffer with the key. This fonction use the XOR encryte concept
      *
      * @param inBuffer
      * @param inOffset

@@ -14,6 +14,8 @@ import de.berlios.jmds.tools.RightsConfiguration;
 import de.berlios.jmds.tools.SecurityConfiguration;
 
 /**
+ * Manage the rigths on server to check access of server object
+ * 
  * @author Denis
  *
  */
@@ -68,7 +70,7 @@ public class RightsManager {
 	public boolean canUse (String szUserId, String szIOR, String szFonction)
 	{
 		String szGroupClient = securityConfig.getclientGroup(szUserId);
-		
-		return rightsConfig.checkFonctionGroupAccess(szGroupClient, szIOR, szFonction);		
+		//return rightsConfig.checkFonctionGroupAccess(szGroupClient, szIOR, szFonction);		
+		return rightsConfig.checkObjectGroupAccess(szGroupClient, szIOR);		
 	}
 }

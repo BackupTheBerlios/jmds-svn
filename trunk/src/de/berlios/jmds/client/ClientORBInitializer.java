@@ -15,6 +15,7 @@ import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
 /**
+ * Initializer witch allow to attach a interceptor on client
  * @author Sébastien GUINCHARD
  * 
  */

@@ -17,6 +17,10 @@ import org.omg.PortableInterceptor.ForwardRequest;
 import slb.iop.slbException;
 
 /**
+ * Allow to intercept message send or receive by client. 
+ * So before send message on orb this objet code the service context.
+ * And before receive message by client this objet decode the service context.
+ * 
  * @author Sébastien GUINCHARD
  * 
  */
@@ -33,7 +37,6 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
 	//----------------------------------------------------------//
     
     /**
-     * @throws slbException 
      * @throws SecurityException 
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_request(org.omg.PortableInterceptor.ClientRequestInfo)
      */

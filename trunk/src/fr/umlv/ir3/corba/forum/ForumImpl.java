@@ -16,8 +16,8 @@ public class ForumImpl extends ForumPOA {
 	private ConcurrentHashMap discussion;
 	
 	/**
-	 * @param theme
-	 * @param moderator
+	 * @param t
+	 * @param m
 	 */
 	public ForumImpl(String t, String m)
 	{
