@@ -43,8 +43,7 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
 
         try {
             byte[] tabByteSC = SCAppletClient.code(tabId);
-            
-            ServiceContext sc = new ServiceContext ();
+        	ServiceContext sc = new ServiceContext ();
             sc.context_data = tabByteSC;
             ri.add_request_service_context(sc,true);
         } catch (slbException e) {

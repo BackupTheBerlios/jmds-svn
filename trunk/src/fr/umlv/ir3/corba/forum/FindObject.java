@@ -90,11 +90,12 @@ public class FindObject {
     			{
     				System.out.println(binding[i].binding_name[j].id + " : "+ binding[i].binding_name[j].kind +  " : " + binding[i].binding_name[j]);
     				Object objProxy = context.resolve(binding[i].binding_name);
+    				System.out.println(objProxy.toString());
     			}  
     			if ( binding[i].binding_type.equals (BindingType.ncontext))
     			{
     				NamingContext newContext =	NamingContextHelper.narrow (context.resolve(binding[i].binding_name));
-    				//createConfig(newContext);
+    				createConfig(orb, newContext);
     			}
     		}
     	} while( iteratorHolder.value != null && iteratorHolder.value.next_n (10, listHolder));

@@ -7,9 +7,17 @@
 package de.berlios.jmds.server;
 
 import org.omg.IOP.ServiceContext;
+import org.omg.PortableInterceptor.AdapterManagerIdHelper;
+import org.omg.PortableInterceptor.AdapterNameHelper;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
+import org.omg.PortableServer.AdapterActivator;
+import org.omg.PortableServer.AdapterActivatorOperations;
+
+import com.sun.corba.se.impl.protocol.giopmsgheaders.TargetAddress;
+import com.sun.corba.se.impl.protocol.giopmsgheaders.TargetAddressHelper;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 
 
 /**
@@ -33,7 +41,7 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive request_SC: " + ri.operation ());
+		System.out.println ("ServerInter.receive request_SC: " + ri.operation());
 		ServiceContext sc = ri.get_request_service_context (0);
 		SCManager scManager = SCManager.getInstance ();
 		userID = scManager.decode (sc.context_data);
@@ -45,7 +53,8 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive request: " + ri.operation ());
+		System.out.println ("ServerInter.receive request: " + new String (ri.object_id()));
+		System.out.println ("####" + ri.target_most_derived_interface() + "####");
 		if (!RightsManager.getInstance ().canUse (userID + "" , new String (ri.object_id ()) , ri.operation ()))
 		{
 			//throw new SecurityException("User can not access to this object"); 
