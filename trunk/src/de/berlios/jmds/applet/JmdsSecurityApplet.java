@@ -20,21 +20,28 @@ import javacard.framework.ISO7816;
  */
 public class JmdsSecurityApplet extends Applet {
 
-	private final static byte[] SC = "denise".getBytes();
+	private static byte[] SC;
 	
-	private final static byte CLA_SECURITY = (byte) 0x69;
+    private final static byte CLA_SECURITY = (byte) 0x69;
     private final static byte ENCODEUR = (byte) 0x10;
     //private final static byte DECODEUR = (byte) 0x30;
     private final static short BUFFER_LENGTH = (short) 255;
 
     private byte[] buffer;
     private byte messLength;
-
+    
     /**
      * Constructeur par défaut
      */
     protected JmdsSecurityApplet() {
         buffer = new byte[BUFFER_LENGTH];
+        SC[0] = (byte)'d';
+        SC[1] = (byte)'e';
+        SC[2] = (byte)'n';
+        SC[3] = (byte)'i';
+        SC[4] = (byte)'s';
+        SC[5] = (byte)'e';
+        
         messLength = (byte) 0;
         register();
     }
