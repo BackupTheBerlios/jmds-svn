@@ -20,28 +20,23 @@ import javacard.framework.ISO7816;
  */
 public class JmdsSecurityApplet extends Applet {
 
-	private static byte[] SC;
-	
     private final static byte CLA_SECURITY = (byte) 0x69;
-    private final static byte ENCODEUR = (byte) 0x10;
-    //private final static byte DECODEUR = (byte) 0x30;
+    private final static byte CODE = (byte) 0x10;
+    private final static byte GET_CODE = (byte) 0x20;
+    private final static byte DECODE = (byte) 0x30;
+    private final static byte GET_DECODE = (byte) 0x40;
     private final static short BUFFER_LENGTH = (short) 255;
 
     private byte[] buffer;
-    private byte messLength;
+    private byte[] code;
+    private short messLength;
     
     /**
      * Constructeur par défaut
      */
     protected JmdsSecurityApplet() {
         buffer = new byte[BUFFER_LENGTH];
-        SC[0] = (byte)'d';
-        SC[1] = (byte)'e';
-        SC[2] = (byte)'n';
-        SC[3] = (byte)'i';
-        SC[4] = (byte)'s';
-        SC[5] = (byte)'e';
-        
+        code = new byte[BUFFER_LENGTH];
         messLength = (byte) 0;
         register();
     }
@@ -54,7 +49,7 @@ public class JmdsSecurityApplet extends Applet {
     }
 
     /**
-     * Méthide appelée à l'arrivée d'une trame APDU
+     * Méthode appelée à l'arrivée d'une trame APDU
      * 
      * @param apdu
      * @throws ISOException
@@ -62,36 +57,41 @@ public class JmdsSecurityApplet extends Applet {
      * @see javacard.framework.Applet#process(javacard.framework.APDU)
      */
     public void process(APDU apdu) throws ISOException {
-        byte[] tmpBuffer = apdu.getBuffer();
+        byte[] buffer = apdu.getBuffer();
 
-        // CLA à 0x80
-        if (tmpBuffer[ISO7816.OFFSET_CLA] == CLA_SECURITY) {
-            switch (tmpBuffer[ISO7816.OFFSET_INS]) {
- /*           case ENCODEUR:
-            	apdu.setOutgoingLength((short) messLength);
-            	apdu.sendBytesLong(SC, (short) 0, (short) messLength);
-            	
-            	messLength = (byte)(apdu.setIncomingAndReceive());
-//                if ((byteRead > (byte) BUFFER_LENGTH) || (byteRead <= (byte) 0))
-//                    ISOException.throwIt(ISO7816.SW_WRONG_DATA);
-                for (byte i = (byte) 0; i < messL ength; i++) {
-                    buffer[i] = tmpBuffer[ISO7816.OFFSET_CDATA + i];
-                }
-                break;
-*/
-            case ENCODEUR:
-//            	//Affectration du service context au buffer de la trame
-//            	buffer = SC;
-//                // Le = taille de la réponse attendue
-//            	messLength = (byte)(apdu.setIncomingAndReceive());
-//            	short Le = apdu.setOutgoing();
-//                // Verification que Le >= messLength (taille des données envoyées)
-//                if (Le < messLength)
-//                    ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
-                apdu.setOutgoingLength((short) SC.length);
-                apdu.sendBytesLong(SC, (short) 0, (short) SC.length);
-                break;
+        // CLA à 69
+        if (buffer[ISO7816.OFFSET_CLA] == CLA_SECURITY) {
+            switch (buffer[ISO7816.OFFSET_INS]) {
+                case CODE:
+                    encode(apdu);
+                    break;
+                
+                case GET_CODE:
+                    getEncode(apdu);
+                    break;
+
+                case DECODE:
+                    break;
+                    
+                case GET_DECODE:
+                    break;
             }
         }
+    }
+    
+    private void encode(APDU apdu)
+    {
+        messLength = apdu.setIncomingAndReceive();
+        for (int i = 0; i < messLength; i++) {
+            code[i] = (byte)(buffer[i + ISO7816.OFFSET_CDATA] & 0x10);
+        }
+    }
+    
+    private void getEncode(APDU apdu)
+    {
+        if(apdu.setOutgoing() < messLength)
+            ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
+        
+        apdu.sendBytesLong(code, (short)0, messLength);
     }
 }
