@@ -26,7 +26,8 @@ public class ForumClient {
         // props.put("org.omg.CORBA.ORBSingletonClass","org.openorb.CORBA.ORBSingleton" );
         // props.put( "verbose", "5" );
         props.put("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.client.ClientORBInitializer", "");
-
+        props.put("org.omg.CORBA.ORBInitialPort" , "1234");
+        
         ORB orb = ORB.init(args, props);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));

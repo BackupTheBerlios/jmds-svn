@@ -33,14 +33,14 @@ public class ClientORBInitializer extends LocalObject implements ORBInitializer 
      * @see org.omg.PortableInterceptor.ORBInitializerOperations#pre_init(org.omg.PortableInterceptor.ORBInitInfo)
      */
     public void pre_init(ORBInitInfo info) {
-        System.out.println("MonORBInitializer.pre_init: ORB ID: " + info.orb_id());
+        System.out.println("MonORBInitializer.pre_init: ORB ID: " + info);
     }
 
     /**
      * @see org.omg.PortableInterceptor.ORBInitializerOperations#post_init(org.omg.PortableInterceptor.ORBInitInfo)
      */
     public void post_init(ORBInitInfo info) {
-        System.out.println("MonORBInitializer.post_init: ORB ID: " + info.orb_id());
+        System.out.println("MonORBInitializer.post_init: ORB ID: " + info);
         ClientInter client = new ClientInter();
         try {
             info.add_client_request_interceptor(client);

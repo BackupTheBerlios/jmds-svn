@@ -44,7 +44,7 @@ public class PersitantForumServer {
         props.put ("org.omg.PortableInterceptor.ORBInitializerClass.de.berlios.jmds.server.ServerORBInitializer" , "");
         props.put ("com.sun.CORBA.POA.ORBPersistentServerPort" , "12345");
         props.put ("com.sun.CORBA.POA.ORBServerId" , "1");
-        props.put ("ORBInitialPort" , "1234");
+        props.put ("org.omg.CORBA.ORBInitialPort" , "1234");
 
 		ORB orb = ORB.init(args, props);
 		POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
@@ -62,7 +62,7 @@ public class PersitantForumServer {
 		
 		byte [] objectID = forumPOA.activate_object(forum);		
 		Object obj = forumPOA.id_to_reference(objectID);
-        
+        System.out.println(objectID);
         System.out.println(orb.object_to_string(obj));
         //Création du service d'annuaire
         NamingContextExt nc = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
