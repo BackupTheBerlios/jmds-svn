@@ -38,17 +38,17 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_request(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void send_request(ClientRequestInfo ri) throws ForwardRequest, SecurityException{
+        System.out.println("ClientInter.send_request request: " + ri.request_id());
         int id = ri.request_id();
         byte[] tabId = Integer.toString(id).getBytes();
         
-        // La méthode magique !!
-        System.out.println("Target= "+ ri.target());
-
         try {
             byte[] tabByteSC = SCAppletClient.code(tabId);
         	ServiceContext sc = new ServiceContext ();
             sc.context_data = tabByteSC;
             ri.add_request_service_context(sc,true);
+        } catch (SecurityException e) {
+            e.printStackTrace();
         } catch (slbException e) {
             throw new SecurityException("Impossible de coder le message: erreur de communication avec la carte", e);
         }
@@ -58,44 +58,52 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#send_poll(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void send_poll(ClientRequestInfo ri) {
-        System.out.println("ClientInter.send poll: " + ri.operation());
+        System.out.println("ClientInter.send_poll request: " + ri.request_id());
     }
 
     /**
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#receive_reply(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void receive_reply(ClientRequestInfo ri) {
-        System.out.println("ClientInter.receive reply: " + ri.operation()
-                + " number: " + ri.request_id());
-        // ServiceContext sc = ri.get_reply_service_context(0);
-        // String sData = new String(sc.context_data);
+        System.out.println("ClientInter.receive_reply request: " + ri.request_id());
+        ServiceContext sc = ri.get_reply_service_context(0);
+        
+        try {
+            short[] scDecode = SCAppletClient.decode (sc.context_data);
+            System.out.println (scDecode);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (slbException e) {
+            e.printStackTrace();
+            throw new SecurityException("Impossible de décoder le message: erreur de communication avec la carte", e);
+        }
     }
 
     /**
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#receive_exception(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void receive_exception(ClientRequestInfo ri) throws ForwardRequest {
-        System.out.println("ClientInter.receive exception: "+ ri.operation());
+        System.out.println("ClientInter.receive request: "+ ri.request_id());
     }
 
     /**
      * @see org.omg.PortableInterceptor.ClientRequestInterceptorOperations#receive_other(org.omg.PortableInterceptor.ClientRequestInfo)
      */
     public void receive_other(ClientRequestInfo ri) throws ForwardRequest {
-        System.out.println("ClientInter.receive other: " + ri.operation());
+        System.out.println("ClientInter.receive request: " + ri.request_id());
     }
 
     /**
      * @see org.omg.PortableInterceptor.InterceptorOperations#name()
      */
     public String name() {
-        return "Mon intercepteur";
+        return "JMDS intercepteur";
     }
 
     /**
      * @see org.omg.PortableInterceptor.InterceptorOperations#destroy()
      */
     public void destroy() {
-        System.out.println("Security Interceptor killed !!");
+        System.out.println("Client Security Interceptor killed !!");
     }
 }

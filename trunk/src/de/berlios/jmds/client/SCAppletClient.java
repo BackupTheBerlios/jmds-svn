@@ -34,9 +34,10 @@ public class SCAppletClient {
      * @throws slbException 
      * @throws SecurityException 
      */
-    public static byte[] code(byte[] requestId) throws SecurityException, slbException {
-        int[] body = Convertor.stringToIntArray("555555");
-        byte[] code = Convertor.shortArrayToByteArray(AppletManager.sendCardAPDU(CLA_SECURITY, INS_CODE, 0, 0, body, 0x40));
+    public final static byte[] code(byte[] requestId) throws SecurityException, slbException {
+        int[] intRequestId = Convertor.ByteArrayToIntArray(requestId);
+        short[] tmpCode = AppletManager.sendCardAPDU(CLA_SECURITY, INS_CODE, 0, 0, intRequestId, 0x40);
+        byte[] code = Convertor.ShortArrayToByteArray(tmpCode);
         return code;
     }
 
@@ -47,9 +48,8 @@ public class SCAppletClient {
      * @throws slbException 
      * @throws SecurityException 
      */
-    public static byte[] decode(byte[] SC) throws SecurityException, slbException {
-        int[] body = Convertor.stringToIntArray("555555");
-        byte[] decode = Convertor.shortArrayToByteArray(AppletManager.sendCardAPDU(CLA_SECURITY, INS_DECODE, 0, 0, body, 0x40));
-        return decode;
+    public final static short[] decode(byte[] sc) throws SecurityException, slbException {
+        int[] intRequestId = Convertor.ByteArrayToIntArray(sc);
+        return AppletManager.sendCardAPDU(CLA_SECURITY, INS_DECODE, 0, 0, intRequestId, 0x40);
     }
 }

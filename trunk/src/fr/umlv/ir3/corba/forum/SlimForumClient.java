@@ -3,8 +3,6 @@
  */
 package fr.umlv.ir3.corba.forum;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Date;
 
 import org.omg.CORBA.Any;
@@ -33,8 +31,6 @@ public class SlimForumClient {
         
         ORB orb = ORB.init(args, props);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
         // Création du service d'annuaire
         Object ns = orb.resolve_initial_references("NameService");
         NamingContextExt nc = NamingContextExtHelper.narrow(ns);
@@ -58,6 +54,5 @@ public class SlimForumClient {
         } catch (Reject e) {
             System.out.println("Message non ajouté pour cette raison:\n" + e.message);
         }
-        
     }
 }

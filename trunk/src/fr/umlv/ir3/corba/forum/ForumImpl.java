@@ -19,10 +19,10 @@ public class ForumImpl extends ForumPOA {
 	 * @param theme
 	 * @param moderator
 	 */
-	public ForumImpl(String theme, String moderator)
+	public ForumImpl(String t, String m)
 	{
-		this.theme = theme;
-		this.moderator = moderator;
+		this.theme = t;
+		this.moderator = m;
 		discussion = new ConcurrentHashMap();
 	}
 	
@@ -78,9 +78,9 @@ public class ForumImpl extends ForumPOA {
 	 /**
 	 * @see fr.umlv.ir3.corba.forum.ForumOperations#getInfo(org.omg.CORBA.StringHolder, org.omg.CORBA.StringHolder, org.omg.CORBA.IntHolder)
 	 */
-	public void getInfo (StringHolder theme, StringHolder moderator, IntHolder size) {
-	 	theme.value = this.theme;
-	 	moderator.value = this.moderator;
+	public void getInfo (StringHolder t, StringHolder m, IntHolder size) {
+	 	t.value = this.theme;
+	 	m.value = this.moderator;
 	 	size.value = discussion.size();
 	 }
 }

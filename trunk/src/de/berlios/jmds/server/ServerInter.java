@@ -7,18 +7,9 @@
 package de.berlios.jmds.server;
 
 import org.omg.IOP.ServiceContext;
-import org.omg.PortableInterceptor.AdapterManagerIdHelper;
-import org.omg.PortableInterceptor.AdapterNameHelper;
 import org.omg.PortableInterceptor.ForwardRequest;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
-import org.omg.PortableServer.AdapterActivator;
-import org.omg.PortableServer.AdapterActivatorOperations;
-
-import com.sun.corba.se.impl.protocol.giopmsgheaders.TargetAddress;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.TargetAddressHelper;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
-
 
 /**
  * @author Sébastien GUINCHARD
@@ -26,7 +17,7 @@ import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor
 {
 
-	private int					userID;
+	private int userID;
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -41,11 +32,17 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request_service_contexts (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive request_SC: " + ri.operation());
-		ServiceContext sc = ri.get_request_service_context (0);
-		SCManager scManager = SCManager.getInstance ();
-		userID = scManager.decode (sc.context_data);
-		System.out.println (userID);
+		System.out.println ("ServerInter.receive_request_SC request: " + ri.request_id());
+		ServiceContext sc = ri.get_request_service_context(0);
+		byte[] scDecode = SCManager.getInstance().decode (sc.context_data);
+        
+        System.out.println("Target= "+ ri.orb_id());
+		System.out.println (scDecode);
+        
+        if (!RightsManager.getInstance ().canUse (userID + "" , ri.orb_id() , ri.operation ()))
+        {
+            throw new SecurityException("User can not access to this object"); 
+        }
 	}
 
 	/**
@@ -53,12 +50,7 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void receive_request (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.receive request: " + new String (ri.object_id()));
-		System.out.println ("####" + ri.target_most_derived_interface() + "####");
-		if (!RightsManager.getInstance ().canUse (userID + "" , new String (ri.object_id ()) , ri.operation ()))
-		{
-			//throw new SecurityException("User can not access to this object"); 
-		}
+		System.out.println ("ServerInter.receive request: " + ri.request_id());
 	}
 
 	/**
@@ -66,13 +58,15 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_reply (ServerRequestInfo ri)
 	{
-		ServiceContext sc = ri.get_request_service_context (0);
-		SCManager scManager = SCManager.getInstance ();
+        System.out.println("ServerInter.send_reply request: " + ri.request_id());
+        int id = ri.request_id();
+        byte[] tabId = Integer.toString(id).getBytes();
+        
+		byte [] scData = SCManager.getInstance().code(tabId);
+        ServiceContext sc = new ServiceContext ();
+        sc.context_data = scData;
 
-		byte [] tabByteSC = new Integer (ri.request_id ()).toString ().getBytes ();
-		//byte [] tabByteSC = scManager.code (tabId);
-		ri.add_reply_service_context (sc , true);
-		System.out.println ("ServerInter.send_reply: " + tabByteSC);
+		ri.add_reply_service_context(sc , true);
 	}
 
 	/**
@@ -80,7 +74,7 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_exception (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.send_exception: " + ri.operation ());
+		System.out.println ("ServerInter.send_exception: " + ri.operation());
 	}
 
 	/**
@@ -88,7 +82,7 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void send_other (ServerRequestInfo ri) throws ForwardRequest
 	{
-		System.out.println ("ServerInter.send_other: " + ri.operation ());
+		System.out.println ("ServerInter.send_other: " + ri.operation());
 
 	}
 
@@ -97,7 +91,7 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public String name ()
 	{
-		return "Mon Intercepteur Serveur";
+		return "JMDS Intercepteur Serveur";
 	}
 
 	/**
@@ -105,5 +99,6 @@ public class ServerInter extends org.omg.CORBA.LocalObject implements ServerRequ
 	 */
 	public void destroy ()
 	{
-	}
+        System.out.println("Server Security Interceptor killed !!");   
+    }
 }

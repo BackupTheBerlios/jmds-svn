@@ -25,10 +25,6 @@ public class RightsManager {
 	/** The rights configuration **/
 	private RightsConfiguration rightsConfig		= RightsConfiguration.getInstance();
 	
-	
-	
-	
-	
 	/** The singleton instance * */
 	private static RightsManager INSTANCE = null;
 	
@@ -40,7 +36,10 @@ public class RightsManager {
 	 * Constructor
 	 *  
 	 */
-	private RightsManager (){}
+	private RightsManager (){
+     rightsConfig = RightsConfiguration.getInstance();
+     securityConfig = SecurityConfiguration.getInstance();
+    }
 	
 	//----------------------------------------------------------//
 	//------------------- PUBLIC METHODS -----------------------//

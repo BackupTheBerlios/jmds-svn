@@ -78,7 +78,6 @@ public class RightsConfiguration {
 	public boolean checkFonctionGroupAccess(String szGroup, String szIOR, String szFonction)
 	{
 		System.out.println("Recherche des groups ayant acces");
-		int i = 0;
 		int iIOR = -1;
 		int iFonction = -1;
 		
@@ -118,11 +117,10 @@ public class RightsConfiguration {
 			
 		if (iFonction !=- 1) 	// si la fonction existe
 			return false ;
-		else					// si la fonction n existe pas on l ajoute
-		{
-			int iAddFonction = countFonction(iIOR)+1;
-			rightsConfig.addProperty("ior("+ iIOR+ ").fonction("+ iAddFonction+ ")[@id]", szFonction);
-		}
+		
+        // si la fonction n existe pas on l ajoute
+		int iAddFonction = countFonction(iIOR)+1;
+		rightsConfig.addProperty("ior("+ iIOR+ ").fonction("+ iAddFonction+ ")[@id]", szFonction);
 		
 		return true;
 	}
@@ -137,13 +135,11 @@ public class RightsConfiguration {
 		
 		if (iIOR !=-1) // Si l'objet existe dans le fichier de conf
 			return false ;
-		else // si l'objet n'existe pas on l'ajoute
-		{
-			int iAddIOR = countIOR()+1;
-			rightsConfig.addProperty("ior("+ iAddIOR +")[@id]", szIOR);
-			
-		}
-		return true;
+		// si l'objet n'existe pas on l'ajoute
+		int iAddIOR = countIOR()+1;
+		rightsConfig.addProperty("ior("+ iAddIOR +")[@id]", szIOR);
+
+        return true;
 	}
 	
 	/**

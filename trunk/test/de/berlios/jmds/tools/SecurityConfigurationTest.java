@@ -21,7 +21,7 @@ public class SecurityConfigurationTest {
 		SecurityConfiguration securityConf = SecurityConfiguration.getInstance();
 		
 		System.out.println("Key server : " + securityConf.getServerKey());
-		System.out.println("Key client 2 : " + securityConf.getClientKey("2"));
-		System.out.println("Key groupe client 1 : " + securityConf.getclientGroup("1"));
+		System.out.println("Key client 2 : " + securityConf.getClientKey("jmds2"));
+		System.out.println("Key groupe client 1 : " + securityConf.getclientGroup("jmds1"));
 	}
 }

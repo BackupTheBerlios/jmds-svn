@@ -9,60 +9,32 @@
  */
 package de.berlios.jmds.clients;
 
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.interfaces.RSAPublicKey;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
-
-
 import slb.iop.slbException;
 import de.berlios.jmds.client.SCAppletClient;
+import de.berlios.jmds.server.SCManager;
 import de.berlios.jmds.server.UserManagerAppletClient;
-import de.berlios.jmds.tools.Convertor;
 
 /**
  * DOCME
  * @author Jérôme GUERS
  * 
  */
-public class TestSCApllet{
+public class TestSCApplet{
 
-    public static void main(String[] args) throws NoSuchAlgorithmException, SecurityException, slbException, NoSuchPaddingException, InvalidKeyException, ShortBufferException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException {
-        KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+    public static void main(String[] args) throws SecurityException, slbException
+    {
+        UserManagerAppletClient.setUser("jmds1".getBytes());
+        UserManagerAppletClient.setServerKey("0123456789".getBytes());        
         
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        Key privateKey = keyPair.getPrivate();
+        byte[] code = "test".getBytes();
         
-        UserManagerAppletClient.setUser("jmds".getBytes());
-        UserManagerAppletClient.setServerKeyModulus(publicKey.getModulus().toByteArray());
-        UserManagerAppletClient.setServerKeyExponent(publicKey.getPublicExponent().toByteArray());
+        System.out.println("Origine: " + new String(code));
+        code = SCAppletClient.code(code);
         
-        byte[] code = {(short)0x55, (short)0x55,(short)0x55,(short)0x55,(short)0x55};
-        
-        try {
-            code = SCAppletClient.code(code);
-            
-            System.out.println(Convertor.ByteArrayToSpacedHexString(code));
-            
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            cipher.doFinal(code, (short)0, (short) code.length, code, (short)0);
-
-            System.out.println(Convertor.ByteArrayToSpacedHexString(code));
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (slbException e) {
-            e.printStackTrace();
-        } 
+        System.out.println("Codée: " + new String(code));
+        code = SCManager.getInstance().decode(code);
+        System.out.println("Décodée: " + new String(code));
+        System.out.println("Reste à parser le userID et le requestID pour vérifier");
         System.exit(0);
     }
 }
