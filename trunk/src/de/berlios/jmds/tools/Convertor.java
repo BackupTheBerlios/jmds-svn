@@ -115,4 +115,71 @@ public class Convertor {
         }
         return shortKey;
     }
+
+    /** 
+     * DOCME
+     *
+     * @param shortListAID
+     * @return 
+     */
+    public final static String ShortArrayToSpacedHexString(short[] shortArray) {
+        String strArray = "";
+        String strHex = "";
+        byte[] dataArray;
+        byte[] dataArray2 = new byte[1];
+        
+        for (int x=0; x < shortArray.length; x++) {
+          dataArray = ShortToBytePair(shortArray[x]);
+          dataArray2[0] = dataArray[1];
+          strHex = byteToHexString(dataArray2);      
+          strArray = strArray + strHex + " ";
+        }
+        return strArray;
+    }
+    
+    public static byte[] ShortToBytePair(short i)
+    {
+        byte[] retVal = new byte[2];
+        retVal[0] = (byte)((i & 0xFFFF) >> 8);
+        retVal[1] = (byte)(i & 0x00FF);
+        return retVal;
+    }
+
+    /** 
+     * DOCME 
+     * 
+     * @param code
+     * @return 
+     */
+    public static String ByteArrayToSpacedHexString(byte[] byteArray) {
+        String strArray = "";
+        String strHex = "";
+        byte[] dataArray = new byte[1];
+        
+        for (int x=0; x < byteArray.length; x++) {
+          dataArray[0] = byteArray[x];
+          strHex = byteToHexString(dataArray);      
+          strArray = strArray + strHex + " ";
+        }
+        return strArray;    }
+
+    /** 
+     * DOCME 
+     *
+     * @param dataArray
+     * @return 
+     */
+    private static String byteToHexString(byte[] byteArray) {
+        String strArray = new String();
+        strArray = "";
+
+        for (int x=0; x < byteArray.length; x++) {
+            int b = ((int)byteArray[x] & 0x000000ff);
+            if (b < 16) 
+                strArray = strArray + "0" + Integer.toHexString(b).toUpperCase();
+            else  
+                strArray = strArray + Integer.toHexString(b).toUpperCase();
+        }
+        return strArray;
+    }
 }

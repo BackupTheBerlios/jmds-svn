@@ -13,7 +13,7 @@ import javacard.security.KeyBuilder;
 import javacard.security.KeyPair;
 import javacard.security.RSAPrivateKey;
 import javacard.security.RSAPublicKey;
-import javacardx.crypto.*;
+import javacardx.crypto.Cipher;
 
 /**
  * DOCME
@@ -35,7 +35,6 @@ public class SCAppletWithKey extends Applet {
 
     private final static short BUFFER_LENGTH = (short) 255;
 
-    private byte[] buffer;
     private byte[] tmpBuff;
     
     private KeyPair userKeyPair;
@@ -73,10 +72,10 @@ public class SCAppletWithKey extends Applet {
      * @see javacard.framework.Applet#process(javacard.framework.APDU)
      */
     public void process(APDU apdu) throws ISOException {
-        buffer = apdu.getBuffer();
+        byte[] inBuffer = apdu.getBuffer();
 
-        if (buffer[ISO7816.OFFSET_CLA] == CLA_SECURITY) {
-            switch (buffer[ISO7816.OFFSET_INS]) {
+        if (inBuffer[ISO7816.OFFSET_CLA] == CLA_SECURITY) {
+            switch (inBuffer[ISO7816.OFFSET_INS]) {
                 case INS_CODE: encode(apdu); break;
                 case INS_DECODE: break;
                     
@@ -88,16 +87,13 @@ public class SCAppletWithKey extends Applet {
         }
     }
     
-    public boolean select() {
-        return super.select();
-    }
-    
     private void encode(APDU apdu)
     {
         short byteRead = apdu.setIncomingAndReceive();
+        byte[] inBuffer = apdu.getBuffer();
         
         cipher.init(userKeyPair.getPrivate(), Cipher.MODE_ENCRYPT);
-        short outbytes = cipher.doFinal(buffer,(short)ISO7816.OFFSET_CDATA, byteRead, buffer, (short)ISO7816.OFFSET_CDATA);    
+        short outbytes = cipher.doFinal(inBuffer,(short)ISO7816.OFFSET_CDATA, byteRead, inBuffer, (short)ISO7816.OFFSET_CDATA);    
         
         // Send results
         short Le = apdu.setOutgoing();
@@ -107,7 +103,7 @@ public class SCAppletWithKey extends Applet {
         // indicate the number of bytes in the data field
         apdu.setOutgoingLength(outbytes); 
         // at offset 0 send 128 byte of data in the buffer
-        apdu.sendBytesLong(buffer, (short)ISO7816.OFFSET_CDATA, (short)outbytes);
+        apdu.sendBytesLong(inBuffer, (short)ISO7816.OFFSET_CDATA, (short)outbytes);
         
 //        messLength = apdu.setIncomingAndReceive();
 //        RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
@@ -133,6 +129,8 @@ public class SCAppletWithKey extends Applet {
     //                    Public-Key-Transfer                                     //
     ////////////////////////////////////////////////////////////////////////////////
     private void getPubKeyModulusSize( APDU apdu ) {
+        apdu.setIncomingAndReceive();
+        byte[] inBuffer = apdu.getBuffer();
         // Send results
         short Le = apdu.setOutgoing();
         if (Le < (short) 2)
@@ -140,11 +138,11 @@ public class SCAppletWithKey extends Applet {
         
         RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
         short keySize = pubKey.getModulus( tmpBuff,(short) 0);
-        buffer[ (byte)0 ] = (byte) (keySize / 256 );
-        buffer[ (byte)1 ] = (byte) (keySize % 256 );
+        inBuffer[ (byte)0 ] = (byte) (keySize / 256 );
+        inBuffer[ (byte)1 ] = (byte) (keySize % 256 );
         apdu.setOutgoing();
         apdu.setOutgoingLength( (byte) 2 );
-        apdu.sendBytesLong( buffer, (short) 0, (short) 2 );
+        apdu.sendBytesLong( inBuffer, (short) 0, (short) 2 );
     }
     
     private void getPubKeyModulus( APDU apdu ) {
@@ -162,6 +160,9 @@ public class SCAppletWithKey extends Applet {
     }
     
     private void getPubKeyExponentSize( APDU apdu ) {
+        apdu.setIncomingAndReceive();
+        byte[] inBuffer = apdu.getBuffer();
+
         // Send results
         short Le = apdu.setOutgoing();
         if (Le < (short) 2)
@@ -169,11 +170,11 @@ public class SCAppletWithKey extends Applet {
 
         RSAPublicKey pubKey = (RSAPublicKey) userKeyPair.getPublic();
         short keySize = pubKey.getExponent(tmpBuff,(short) 0);
-        buffer[ (byte)0 ] = (byte) (keySize / 256 );
-        buffer[ (byte)1 ] = (byte) (keySize % 256 );
+        inBuffer[ (byte)0 ] = (byte) (keySize / 256 );
+        inBuffer[ (byte)1 ] = (byte) (keySize % 256 );
         apdu.setOutgoing();
         apdu.setOutgoingLength( (byte) 2 );
-        apdu.sendBytesLong( buffer, (short) 0, (short) 2 );
+        apdu.sendBytesLong( inBuffer, (short) 0, (short) 2 );
     }
     
     private void getPubKeyExponent( APDU apdu ) {

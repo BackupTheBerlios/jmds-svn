@@ -24,21 +24,23 @@ import slb.iop.slbException;
 public class SCAppletClient {
 
     /** The singleton instance * */
-    private final static SCAppletClient INSTANCE = new SCAppletClient();
+    private static SCAppletClient INSTANCE;
+    private static IOP APPLET_IOP;
 
-    private final static IOP APPLET_IOP = new IOP();
     private final static short[] APPLET_AID = {
             (short) 0x11, (short) 0x22, (short) 0x33, 
             (short) 0x44, (short) 0x55, (short) 0x66, (short) 0x77 };
+    
+    private final static byte CLA_SECURITY = (byte) 0x69;
+    private final static byte INS_CODE = (byte) 0x10;
+    private final static byte INS_DECODE = (byte) 0x20;
+    
+    private final static byte INS_GETKEY_MOD_SIZE = (byte) 0x40;
+    private final static byte INS_GETKEY_MOD_DATA = (byte) 0x41;
+    private final static byte INS_GETKEY_EXP_SIZE = (byte) 0x42;
+    private final static byte INS_GETKEY_EXP_DATA = (byte) 0x43;
 
     private static SmartCard card = null;
-
-    private static int CLA;
-    private static int INS;
-    private static int P1;
-    private static int P2;
-    private static int[] body;
-    private static int LE;
 
     private static class jmdsIOPListener implements IOPListener {
         public void CardRemoved(IOPEvent event) {
@@ -78,6 +80,12 @@ public class SCAppletClient {
      * @return the singleton instance of LDAP
      */
     public static SCAppletClient getInstance() {
+        if(INSTANCE == null)
+        {
+            APPLET_IOP = new IOP();
+            INSTANCE = new SCAppletClient();
+            findCard();
+        }
         return INSTANCE;
     }
 
@@ -89,29 +97,9 @@ public class SCAppletClient {
      * @throws SecurityException 
      */
     public byte[] code(byte[] requestId) throws SecurityException, slbException {
-        // Envoi de l'APDU CODE
-        CLA = Integer.parseInt("69", 16);
-        INS = Integer.parseInt("10", 16);
-        P1 = Integer.parseInt("00", 16);
-        P2 = Integer.parseInt("00", 16);
-        body = Convertor.stringToIntArray("73119");
-        LE = Integer.parseInt("00", 16);
-        System.out.println(" body: " + requestId.toString());
-
-        sendCardAPDU(card, CLA, INS, P1, P2, body, LE);
-
-        // Envoi de l'APDU GETCODE
-        System.out.print("Envoi de l'APDU Get Code: > ");
-        CLA = (int) Integer.parseInt("69", 16);
-        INS = (int) Integer.parseInt("11", 16);
-        P1 = (int) Integer.parseInt("00", 16);
-        P2 = (int) Integer.parseInt("00", 16);
-        body = Convertor.stringToIntArray("");
-        LE = (int) Integer.parseInt("20", 16);
-        short[] code = sendCardAPDU(card, CLA, INS, P1, P2, body, LE);
-        if (code != null)
-            return Convertor.shortArrayToByteArray(code);
-        return null;
+        int[] body = Convertor.stringToIntArray("555555");
+        byte[] code = Convertor.shortArrayToByteArray(sendCardAPDU(card, CLA_SECURITY, INS_CODE, 0, 0, body, 0x40));
+        return code;
     }
 
     /**
@@ -122,31 +110,11 @@ public class SCAppletClient {
      * @throws SecurityException 
      */
     public byte[] decode(byte[] SC) throws SecurityException, slbException {
-        // Envoi de l'APDU CODE
-        int CLA = Integer.parseInt("69", 16);
-        int INS = Integer.parseInt("10", 16);
-        int P1 = Integer.parseInt("00", 16);
-        int P2 = Integer.parseInt("00", 16);
-        int[] body = Convertor.stringToIntArray("6");
-        int LE = Integer.parseInt("00", 16);
-
-        SmartCard card = new SmartCard();
-        sendCardAPDU(card, CLA, INS, P1, P2, body, LE);
-
-        // Envoi de l'APDU getCode
-        System.out.print("Envoi de l'APDU Get Code: > ");
-        CLA = (int) Integer.parseInt("69", 16);
-        INS = (int) Integer.parseInt("11", 16);
-        P1 = (int) Integer.parseInt("00", 16);
-        P2 = (int) Integer.parseInt("00", 16);
-        body = Convertor.stringToIntArray("");
-        LE = (int) Integer.parseInt("20", 16);
-        short[] code = sendCardAPDU(card, CLA, INS, P1, P2, body, LE);
-
-        SC = Convertor.shortArrayToByteArray(code);
-        return SC;
+        int[] body = Convertor.stringToIntArray("555555");
+        byte[] decode = Convertor.shortArrayToByteArray(sendCardAPDU(card, CLA_SECURITY, INS_DECODE, 0, 0, body, 0x40));
+        return decode;
     }
-
+    
     /**
      * @param card
      * @param LE
@@ -169,15 +137,11 @@ public class SCAppletClient {
         card.BeginTransaction();
         if (!card.SelectAID(APPLET_AID)) // A vérifier. Je ne sais pas si ça marche !!
             throw new SecurityException("Pas d'applet de cryptage !");
-        // CLA = Integer.parseInt("00", 16);
-        // INS = Integer.parseInt("A4", 16);
-        // P1 = Integer.parseInt("04", 16);
-        // P2 = Integer.parseInt("00", 16);
-        // body = Convertor.stringToIntArray("11223344556677");
-        // LE = Integer.parseInt("00", 16);
-        // sendCardAPDU(card,CLA,INS,P1,P2,body,LE);
+        
         short[] out = card.SendCardAPDU(CLA, INS, P1, P2, body, LE);
         card.EndTransaction();
+        if (out == null)
+            out = new short[0];
         return out;
     }
     
@@ -190,6 +154,7 @@ public class SCAppletClient {
         int i = 0;
         while ((i < lstReaders.length) && (card == null)) {
             card = new SmartCard();
+            System.out.println(lstReaders[i]);
             boolean result = APPLET_IOP.Connect(card, lstReaders[i], false);
             if (result) {
                 short[] MACKey = Convertor.HexStringToShortArray("404142434445464748494A4B4C4D4E4F");
@@ -212,12 +177,20 @@ public class SCAppletClient {
                         }
 
                         if ((shortAID[z - 1] & (byte) 0x80) != 1) {
-                            if(!APPLET_AID.equals(shortListAID))
+                            boolean equals = (APPLET_AID.length == shortListAID.length);
+                            for (int j = 0; j < shortListAID.length && equals == true; j++) {
+                                if(APPLET_AID[j] != shortListAID[j])
+                                    equals = false;
+                            }
+                            if(!equals)
+                            {
+                                card.EndTransaction();
                                 card = null;
+                            }
                         }
                     }
-
-                    card.EndTransaction();
+                    if(card != null)
+                        card.EndTransaction();
                 } catch (slbException e) {
                     card = null;
                 }
