@@ -1,0 +1,28 @@
+module forum {
+  struct TextMessage {
+    string title;
+    string author;
+    string date;
+    string body;
+  };
+	
+  struct AudioMessage {
+    string title;
+    string author;
+    string date;
+    string body;
+  };
+  typedef sequence <any> MessageSet;
+  exception Reject { string message; };
+	 
+  interface Forum {
+    readonly attribute string theme;
+    readonly attribute string moderator;
+    void postMessage(in string title,in any m) raises (Reject); 
+    any getMessage(in string title) raises (Reject);
+    void removeMessage(in string title) raises (Reject);
+    MessageSet messageList();
+    void getInfo(out string theme, out string moderator,
+                 out long size);
+  };
+};

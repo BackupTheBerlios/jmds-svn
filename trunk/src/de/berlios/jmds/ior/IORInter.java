@@ -1,6 +1,7 @@
 /*
- * Created on 18 févr. 2005 TODO To change the template for this generated file
- * go to Window - Preferences - Java - Code Style - Code Templates
+ * Created on 18 févr. 2005
+ * by Sébastien GUINCHARD
+ * Copyright: GPL - UMLV(FR) - 2004/2005
  */
 package de.berlios.jmds.ior;
 
@@ -9,8 +10,11 @@ import org.omg.PortableInterceptor.IORInterceptor;
 
 
 /**
- * @author sguincha TODO To change the template for this generated type comment
- *         go to Window - Preferences - Java - Code Style - Code Templates
+ * DOCME
+ * 
+ * @version 0.1
+ * 
+ * @author Sébastien GUINCHARD
  */
 public class IORInter extends org.omg.CORBA.LocalObject implements IORInterceptor
 {
@@ -45,5 +49,4 @@ public class IORInter extends org.omg.CORBA.LocalObject implements IORIntercepto
 		// TODO Auto-generated method stub
 
 	}
-
 }

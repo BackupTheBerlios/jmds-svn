@@ -11,8 +11,7 @@ import javacard.framework.ISOException;
 import javacard.framework.ISO7816;
 
 /**
- * Première classe de test d'une applet JavaCard Renvoie juste les données
- * envoyées
+ * DOCME
  * 
  * @version 0.1
  * 
