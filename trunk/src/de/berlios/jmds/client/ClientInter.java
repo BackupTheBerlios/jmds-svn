@@ -40,6 +40,9 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
     public void send_request(ClientRequestInfo ri) throws ForwardRequest, SecurityException{
         int id = ri.request_id();
         byte[] tabId = Integer.toString(id).getBytes();
+        
+        // La méthode magique !!
+        System.out.println("Target= "+ ri.target());
 
         try {
             byte[] tabByteSC = SCAppletClient.code(tabId);
@@ -92,5 +95,7 @@ public class ClientInter extends org.omg.CORBA.LocalObject implements
     /**
      * @see org.omg.PortableInterceptor.InterceptorOperations#destroy()
      */
-    public void destroy() {}
+    public void destroy() {
+        System.out.println("Security Interceptor killed !!");
+    }
 }

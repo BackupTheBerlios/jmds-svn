@@ -1,12 +1,11 @@
 /*
  * Created on 1 oct. 2004
  */
-package fr.umlv.ir3.corba.forum;
+package de.berlios.jmds.server;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.Object;
 import org.omg.CosNaming.Binding;
-import org.omg.CosNaming.BindingIterator;
 import org.omg.CosNaming.BindingIteratorHolder;
 import org.omg.CosNaming.BindingListHolder;
 import org.omg.CosNaming.BindingType;
