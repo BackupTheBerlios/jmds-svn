@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<jmds>
+   <server key = "serverKey" />
+   <clients>
+      <client id = "id1" key = "clinetKey1" groupe = "grp_1"/>
+      <client id = "id2" key = "clinetKey2" groupe = "grp_2"/>
+      <client id = "id3" key = "clinetKey3" groupe = "grp_1"/>
+   </ clients >
+</jmds>

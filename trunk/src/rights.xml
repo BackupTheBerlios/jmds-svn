@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<jmds>
+	<ior id = "ior_1">
+         <fonction id = "fct_1">
+         	<group id = "grp_1"/>
+         	<group id = "grp_2"/>
+         </fonction>
+         <fonction id = "fct_2">
+         	<group id = "grp_1"/>
+         </fonction>
+         <fonction id = "fct_3">
+         	<group id = "grp_2"/>
+         </fonction>
+         <fonction id = "fct_4"/>
+     <ior id = "ior_2">
+     	<fonction id = "fct_1">
+         	<group id = "grp_1"/>
+         </fonction>
+         <fonction id = "fct_2">
+         	<group id = "grp_2"/>
+         </fonction>
+         <fonction id = "fct_3"/>
+	</ior>
+</jmds>
